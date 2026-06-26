@@ -2,7 +2,7 @@
 
 小家庭共用記帳 PWA。前端部署在 GitHub Pages，登入、家庭同步與帳本資料放在 Supabase。
 
-這一版不使用 OpenAI API，不建立圖片解析 Edge Function，也不提供圖片上傳自動辨識。
+這一版不使用外部看圖辨識服務，不建立圖片解析功能，也不提供圖片上傳自動辨識。
 
 ## 功能
 
@@ -11,8 +11,9 @@
 - 手機、電腦同步同一個 household 帳本
 - Supabase Realtime 只訂閱目前 household
 - 手動記帳
-- 貼上文字後快速拆帳
+- 貼上文字後先預覽拆帳，再確認寫入
 - 固定支出、房租、信貸、分期用規則自動產生月表
+- 未來一次性預留支出，待處理時列入月表扣款
 - 匯出 JSON 備份與 CSV
 - PWA manifest 與 service worker
 
@@ -38,6 +39,13 @@ window.HAPPY_FAMILY_CONFIG = {
 3. 新增、刪除、匯入、建立範例後會寫入 Supabase。
 4. 切換頁籤、回到 App、重新整理頁面時會重新抓資料；Realtime 啟用時也會自動更新。
 
+## 月表公式
+
+- 可用餘額：收入 - 固定/分期/信貸 - 未來預留 - 補貨預留
+- 扣除已記帳支出後：收入 - 固定/分期/信貸 - 未來預留 - 補貨預留 - 已記帳支出
+
+只有狀態為「待處理」的未來預留會列入扣款；「已處理」與「已取消」不會扣。
+
 ## GitHub Pages
 
 這個專案仍是純前端檔案，可以直接部署：
@@ -54,4 +62,4 @@ window.HAPPY_FAMILY_CONFIG = {
 - `app-config.js`：前端 Supabase anon 設定
 - `manifest.json`：PWA manifest
 - `service-worker.js`：快取 GitHub Pages 前端資源
-- `supabase/schema.sql`：資料表、RLS、Realtime 設定
+- `supabase/schema.sql`：資料表、RLS、Realtime 設定，包含 `planned_expenses`
