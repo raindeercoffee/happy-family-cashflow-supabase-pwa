@@ -1,0 +1,31 @@
+{
+  "name": "🐈‍⬛幸福小家旺旺來🐈",
+  "short_name": "幸福小家",
+  "description": "小家庭專用的收入、固定支出、分期、記帳、比價與庫存補貨 PWA。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#E5E0D8",
+  "theme_color": "#809671",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "finance",
+    "productivity",
+    "lifestyle"
+  ],
+  "lang": "zh-Hant-TW"
+}

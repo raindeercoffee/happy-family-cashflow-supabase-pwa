@@ -1,0 +1,2311 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#809671" />
+  <title>🐈‍⬛幸福小家旺旺來🐈</title>
+  <style>
+    :root{
+      --matcha:#809671;
+      --almond:#E5E0D8;
+      --pistache:#B3B792;
+      --chai:#D2AB80;
+      --carob:#725C3A;
+      --vanilla:#E5D2B8;
+      --paper:#F7F2E9;
+      --ink:#30271C;
+      --muted:#766B5C;
+      --danger:#A4473F;
+      --ok:#57745D;
+      --line:rgba(114,92,58,.18);
+      --shadow:0 12px 36px rgba(48,39,28,.12);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",Segoe UI,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(179,183,146,.35), transparent 34%),
+        linear-gradient(180deg,var(--almond),var(--paper));
+      min-height:100vh;
+    }
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    .app{
+      max-width:1080px;
+      margin:0 auto;
+      padding:18px 14px 96px;
+    }
+    header{
+      position:sticky;
+      top:0;
+      z-index:10;
+      margin:-18px -14px 14px;
+      padding:18px 14px 12px;
+      backdrop-filter:blur(18px);
+      background:rgba(229,224,216,.82);
+      border-bottom:1px solid var(--line);
+    }
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      max-width:1080px;
+      margin:0 auto;
+    }
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    h1{
+      margin:0;
+      font-size:22px;
+      letter-spacing:.04em;
+      color:var(--carob);
+    }
+    .subtitle{
+      font-size:12px;
+      color:var(--muted);
+    }
+    .toolbar{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .pill,.ghost{
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:9px 12px;
+      background:rgba(255,255,255,.36);
+      color:var(--carob);
+    }
+    .pill.primary{
+      background:var(--carob);
+      color:white;
+      border-color:var(--carob);
+    }
+    nav{
+      position:fixed;
+      left:50%;
+      bottom:14px;
+      transform:translateX(-50%);
+      width:min(96vw,720px);
+      z-index:20;
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      gap:6px;
+      padding:8px;
+      background:rgba(229,224,216,.92);
+      border:1px solid var(--line);
+      border-radius:999px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(14px);
+    }
+    nav button{
+      border:0;
+      border-radius:999px;
+      padding:10px 6px;
+      color:var(--carob);
+      background:transparent;
+      font-size:12px;
+      white-space:nowrap;
+    }
+    nav button.active{
+      background:var(--matcha);
+      color:white;
+      font-weight:700;
+    }
+    .section{display:none}
+    .section.active{display:block}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(12,1fr);
+      gap:12px;
+    }
+    .card{
+      grid-column:span 12;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:rgba(255,255,255,.45);
+      box-shadow:var(--shadow);
+      padding:16px;
+      overflow:hidden;
+    }
+    .card h2,.card h3{
+      margin:0 0 10px;
+      color:var(--carob);
+      letter-spacing:.03em;
+    }
+    .card h2{font-size:18px}
+    .card h3{font-size:15px}
+    .span-4{grid-column:span 4}
+    .span-5{grid-column:span 5}
+    .span-6{grid-column:span 6}
+    .span-7{grid-column:span 7}
+    .span-8{grid-column:span 8}
+    .stat{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-height:112px;
+      justify-content:space-between;
+    }
+    .stat small{color:var(--muted)}
+    .money{
+      font-size:26px;
+      font-weight:800;
+      color:var(--carob);
+      letter-spacing:-.03em;
+    }
+    .money.ok{color:var(--ok)}
+    .money.bad{color:var(--danger)}
+    .form{
+      display:grid;
+      grid-template-columns:repeat(12,1fr);
+      gap:10px;
+      align-items:end;
+    }
+    label{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      color:var(--muted);
+      font-size:12px;
+      grid-column:span 6;
+    }
+    label.full{grid-column:span 12}
+    label.third{grid-column:span 4}
+    label.quarter{grid-column:span 3}
+    label.two{grid-column:span 2}
+    input,select,textarea{
+      width:100%;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:rgba(255,255,255,.72);
+      color:var(--ink);
+      padding:11px 12px;
+      outline:none;
+    }
+    textarea{min-height:86px;resize:vertical}
+    input:focus,select:focus,textarea:focus{
+      border-color:var(--matcha);
+      box-shadow:0 0 0 3px rgba(128,150,113,.18);
+    }
+    .actions{
+      grid-column:span 12;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .btn{
+      border:0;
+      border-radius:14px;
+      padding:11px 14px;
+      color:white;
+      background:var(--carob);
+      font-weight:700;
+    }
+    .btn.secondary{background:var(--matcha)}
+    .btn.light{
+      color:var(--carob);
+      background:var(--vanilla);
+    }
+    .btn.warn{background:var(--danger)}
+    .hint{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.55;
+    }
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin-top:10px;
+    }
+    .item{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:10px;
+      align-items:start;
+      padding:12px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:rgba(255,255,255,.42);
+    }
+    .item strong{color:var(--carob)}
+    .meta{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.55;
+    }
+    .row-actions{
+      display:flex;
+      gap:6px;
+      align-items:center;
+    }
+    .icon{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.6);
+      color:var(--carob);
+      border-radius:12px;
+      padding:8px 10px;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      border-radius:999px;
+      padding:4px 8px;
+      background:rgba(128,150,113,.16);
+      color:var(--carob);
+      font-size:12px;
+      margin:3px 4px 0 0;
+    }
+    .tag.danger{background:rgba(164,71,63,.13);color:var(--danger)}
+    .tag.chai{background:rgba(210,171,128,.28)}
+    .tag.ok{background:rgba(87,116,93,.14);color:var(--ok)}
+    table{
+      width:100%;
+      border-collapse:collapse;
+      overflow:hidden;
+      border-radius:16px;
+      font-size:13px;
+    }
+    th,td{
+      padding:10px 8px;
+      text-align:left;
+      border-bottom:1px solid var(--line);
+      vertical-align:top;
+    }
+    th{
+      color:var(--carob);
+      background:rgba(179,183,146,.22);
+      font-size:12px;
+      white-space:nowrap;
+    }
+    td:last-child,th:last-child{text-align:right}
+    .kpis{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .kpi{
+      border-radius:18px;
+      padding:12px;
+      background:rgba(255,255,255,.46);
+      border:1px solid var(--line);
+    }
+    .kpi small{display:block;color:var(--muted);margin-bottom:6px}
+    .kpi b{font-size:20px;color:var(--carob)}
+    .empty{
+      color:var(--muted);
+      font-size:13px;
+      padding:10px 0;
+    }
+    .monthTabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin:14px 0 12px;
+    }
+    .monthTabs button{
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:10px 14px;
+      background:rgba(255,255,255,.52);
+      color:var(--carob);
+      font-weight:700;
+    }
+    .monthTabs button.active{
+      background:var(--matcha);
+      color:white;
+      border-color:var(--matcha);
+    }
+    .monthSelectHeader{
+      display:grid;
+      grid-template-columns:minmax(180px,320px) auto;
+      gap:10px;
+      align-items:end;
+      margin:10px 0 16px;
+    }
+    .monthPanelTitle{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin:8px 0 12px;
+    }
+    .monthPanelTitle h3{
+      margin:0;
+      font-size:20px;
+    }
+    .monthRow{
+      cursor:pointer;
+    }
+    .monthRow:hover{
+      background:rgba(179,183,146,.12);
+    }
+    .monthDetail{
+      display:none;
+      background:rgba(255,255,255,.36);
+    }
+    .monthDetail.open{
+      display:table-row;
+    }
+    .detailGrid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      text-align:left;
+    }
+    .detailBox{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px;
+      background:rgba(255,255,255,.45);
+    }
+    .detailBox b{
+      color:var(--carob);
+      display:block;
+      margin-bottom:6px;
+    }
+    @media(max-width:820px){
+      .detailGrid{grid-template-columns:1fr}
+    }
+    .notice{
+      border-left:4px solid var(--chai);
+      background:rgba(210,171,128,.18);
+      padding:12px;
+      border-radius:14px;
+      color:var(--carob);
+      line-height:1.65;
+      font-size:13px;
+    }
+    .dangerBox{
+      border-left-color:var(--danger);
+      background:rgba(164,71,63,.12);
+    }
+    .okBox{
+      border-left-color:var(--matcha);
+      background:rgba(128,150,113,.14);
+    }
+    .quickStores{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:4px;
+    }
+    .quickStores button{
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:6px 10px;
+      background:rgba(255,255,255,.55);
+      color:var(--carob);
+      font-size:12px;
+    }
+    .quickStores button.active{background:var(--pistache);font-weight:800}
+    .tabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .tabs button{
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:8px 11px;
+      background:rgba(255,255,255,.45);
+      color:var(--carob);
+    }
+    .tabs button.active{background:var(--carob);color:white}
+    .hidden{display:none!important}
+    body.signed-out main,
+    body.signed-out nav,
+    body.signed-out #installBox{display:none!important}
+    .authPanel{max-width:720px;margin:18px auto 0}
+    .authStatus{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:9px 12px;
+      background:rgba(255,255,255,.38);
+      color:var(--carob);
+      font-size:12px;
+    }
+    .syncDot{
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:var(--chai);
+      display:inline-block;
+    }
+    .syncDot.ok{background:var(--ok)}
+    .syncDot.bad{background:var(--danger)}
+    .aiResult{
+      white-space:pre-wrap;
+      margin-top:8px;
+    }
+    .customStoreLabel{
+      transition:opacity .18s ease;
+    }
+    .installPrompt{
+      position:fixed;
+      right:14px;
+      bottom:86px;
+      max-width:330px;
+      z-index:30;
+      display:none;
+    }
+    .installPrompt.show{display:block}
+    @media(max-width:820px){
+      .span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}
+      label,label.third,label.quarter,label.two{grid-column:span 12}
+      .kpis{grid-template-columns:repeat(2,1fr)}
+      .toolbar{display:none}
+      .money{font-size:22px}
+      nav button{font-size:11px;padding:9px 4px}
+      .item{grid-template-columns:1fr}
+      .row-actions{justify-content:flex-start;flex-wrap:wrap}
+      table{font-size:12px}
+      th,td{padding:8px 6px}
+    }
+    @media(max-width:420px){
+      .kpis{grid-template-columns:1fr}
+      h1{font-size:19px}
+      nav{grid-template-columns:repeat(4,1fr);gap:4px;padding:6px}
+      nav button{font-size:10px}
+    }
+  </style>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="幸福小家" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="topbar">
+        <div class="brand">
+          <h1>🐈‍⬛幸福小家旺旺來🐈</h1>
+        </div>
+        <div class="toolbar">
+          <span class="authStatus"><span class="syncDot" id="syncDot"></span><span id="syncStatus">尚未登入</span></span>
+          <button class="pill" id="exportBtn">匯出備份</button>
+          <label class="pill" style="display:inline-flex;flex-direction:row;align-items:center;gap:6px">
+            匯入備份
+            <input id="importFile" type="file" accept="application/json" style="display:none">
+          </label>
+          <button class="pill primary" id="seedBtn">建立範例</button>
+          <button class="pill" id="logoutBtn" type="button">登出</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="authPanel card" id="authPanel">
+      <h2>登入家庭帳本</h2>
+      <p class="hint">使用 Supabase Auth 登入。第一個登入的人會建立家庭帳本；另一半用同一組家庭邀請碼加入後，手機與電腦都會同步同一份資料。</p>
+      <form class="form" id="authForm">
+        <label>Email
+          <input name="email" type="email" autocomplete="email" required>
+        </label>
+        <label>密碼
+          <input name="password" type="password" autocomplete="current-password" minlength="6" required>
+        </label>
+        <label class="full">家庭邀請碼，可空白
+          <input name="inviteCode" autocomplete="off" placeholder="已有家庭帳本的人再填">
+        </label>
+        <div class="actions">
+          <button class="btn secondary" type="submit" data-auth-action="signin">登入</button>
+          <button class="btn light" type="button" id="signupBtn">註冊 / 加入家庭</button>
+        </div>
+      </form>
+      <div class="notice hidden" id="authNotice"></div>
+    </section>
+
+    <main>
+      <section id="home" class="section active">
+        <div class="grid">
+          <div class="card span-4 stat">
+            <small>本月收入</small>
+            <div class="money ok" id="kIncome">$0</div>
+            <small>來自薪水與固定收入設定</small>
+          </div>
+          <div class="card span-4 stat">
+            <small>本月固定/分期支出</small>
+            <div class="money bad" id="kFixed">$0</div>
+            <small>房租、水電、卡費、分期會自動排</small>
+          </div>
+          <div class="card span-4 stat">
+            <small>本月已記帳消費</small>
+            <div class="money bad" id="kSpend">$0</div>
+            <small>電子發票、菜市場、臨時花費</small>
+          </div>
+
+          <div class="card span-4 stat">
+            <small>今天日期</small>
+            <div class="money" id="kToday" style="font-size:22px">$0</div>
+            <small id="kTodayHint">系統會用手機/瀏覽器時間自動判斷</small>
+          </div>
+          <div class="card span-4 stat">
+            <small>本月預估收入</small>
+            <div class="money ok" id="kPlannedIncome">$0</div>
+            <small>用收入來源設定推估</small>
+          </div>
+          <div class="card span-4 stat">
+            <small>本月實收差額</small>
+            <div class="money" id="kIncomeDelta">$0</div>
+            <small>實收 - 預估；可用來抓現金流風險</small>
+          </div>
+
+          <div class="card span-7">
+            <h2>本月金流預估</h2>
+            <div class="kpis">
+              <div class="kpi"><small>月底預估餘額</small><b id="kBalance">$0</b></div>
+              <div class="kpi"><small>建議預留採買</small><b id="kReserve">$0</b></div>
+              <div class="kpi"><small>特價快結束</small><b id="kPromo">0</b></div>
+              <div class="kpi"><small>快補貨項目</small><b id="kStock">0</b></div>
+            </div>
+            <div id="cashflowTable"></div>
+          </div>
+
+          <div class="card span-5">
+            <h2>今天要注意</h2>
+            <div id="alerts"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="months" class="section">
+        <div class="grid">
+          <div class="card span-12">
+            <h2>月表</h2>
+            <form class="form" id="monthSelectForm" style="margin-top:4px">
+              <label class="third">選擇月份
+                <select id="monthSelect" name="month"></select>
+              </label>
+              <div class="actions" style="grid-column:span 9">
+                <button class="btn secondary" type="submit">查看這個月</button>
+              </div>
+            </form>
+            <div id="monthPanel" style="margin-top:16px"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="budget" class="section">
+        <div class="grid">
+          <div class="card span-6">
+            <h2>收入來源設定</h2>
+            <form class="form" id="incomeForm">
+              <label>來源名稱
+                <input name="name" placeholder="例如：A單位長期收入 / B單位三個月專案 / C單位浮動收入" required>
+              </label>
+              <label>每月預估金額
+                <input name="amount" type="number" inputmode="numeric" min="0" step="1" placeholder="保守估計即可" required>
+              </label>
+              <label class="third">入帳日
+                <input name="day" type="number" min="1" max="31" value="5" required>
+              </label>
+              <label class="third">開始月份
+                <input name="start" type="month">
+              </label>
+              <label class="third">結束月份，可空白
+                <input name="end" type="month">
+              </label>
+              <label>收入型態
+                <select name="incomeType">
+                  <option value="stable">長期固定</option>
+                  <option value="variable">每月浮動</option>
+                  <option value="project">短期專案</option>
+                  <option value="oneoff">單月一次性</option>
+                </select>
+              </label>
+              <label>狀態
+                <select name="status">
+                  <option value="active">啟用</option>
+                  <option value="paused">暫停</option>
+                </select>
+              </label>
+              <div class="actions">
+                <button class="btn secondary" type="submit">新增收入來源</button>
+              </div>
+            </form>
+
+            <h3 style="margin-top:18px">本月實收 / 調整</h3>
+            <form class="form" id="incomeActualForm">
+              <label>月份
+                <input name="month" type="month" required>
+              </label>
+              <label>收入來源
+                <select name="sourceId" id="incomeSourceSelect">
+                  <option value="">請先建立收入來源</option>
+                </select>
+              </label>
+              <label>實際收到金額
+                <input name="amount" type="number" inputmode="numeric" min="0" step="1" placeholder="實際入帳金額" required>
+              </label>
+              <label>是否入帳
+                <select name="received">
+                  <option value="yes">已入帳</option>
+                  <option value="no">尚未入帳，只是更新預估</option>
+                </select>
+              </label>
+              <div class="actions">
+                <button class="btn secondary" type="submit">記錄本月實收</button>
+              </div>
+            </form>
+            <div class="list" id="incomeList"></div>
+          </div>
+
+          <div class="card span-6">
+            <h2>固定支出 / 分期設定</h2>
+            <form class="form" id="recurringForm">
+              <label>項目
+                <input name="name" placeholder="房租 / 電費 / 水冷扇分期 / 卡費" required>
+              </label>
+              <label>金額
+                <input name="amount" type="number" inputmode="numeric" min="0" step="1" required>
+              </label>
+              <label class="third">繳費日
+                <input name="day" type="number" min="1" max="31" value="10" required>
+              </label>
+              <label class="third">開始月份
+                <input name="start" type="month">
+              </label>
+              <label class="third">結束月份，可空白
+                <input name="end" type="month">
+              </label>
+              <label>類型
+                <select name="type">
+                  <option value="fixed">固定每月</option>
+                  <option value="installment">分期 / 有結束日</option>
+                  <option value="variable">浮動支出預估</option>
+                </select>
+              </label>
+              <label>類別
+                <select name="category">
+                  <option>房租</option>
+                  <option>水電瓦斯</option>
+                  <option>電話費</option>
+                  <option>卡費</option>
+                  <option>分期付款</option>
+                  <option>保險</option>
+                  <option>交通</option>
+                  <option>機車</option>
+                  <option>盥洗</option>
+                  <option>清潔</option>
+                  <option>美容</option>
+                  <option>飲品</option>
+                  <option>家電</option>
+                  <option>文具</option>
+                  <option>書籍</option>
+                  <option>玩具</option>
+                  <option>旅遊</option>
+                  <option>AI</option>
+                  <option>園藝</option>
+                  <option>咖啡生豆</option>
+                  <option>咖啡包材</option>
+                  <option>衣服</option>
+                  <option>其他</option>
+                </select>
+              </label>
+              <div class="actions">
+                <button class="btn secondary" type="submit">新增固定支出</button>
+              </div>
+            </form>
+            <div class="list" id="recurringList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="prices" class="section">
+        <div class="grid">
+          <div class="card span-5">
+            <h2>比價紀錄</h2>
+            <form class="form" id="priceForm">
+              <label>商品
+                <input name="item" placeholder="洗衣粉 / 衛生紙 / 洗碗精" required>
+              </label>
+              <label>品牌
+                <input name="brand" placeholder="一匙靈 / 白蘭 / 自有品牌">
+              </label>
+              <label>賣場
+                <select name="store" id="storeSelect">
+                  <option>家樂福</option>
+                  <option>康是美</option>
+                  <option>全聯</option>
+                  <option>小七</option>
+                  <option>全家</option>
+                  <option>OK</option>
+                  <option>萊爾富</option>
+                  <option>寶雅</option>
+                  <option>屈臣氏</option>
+                  <option>蝦皮</option>
+                  <option>momo</option>
+                  <option>菜市場</option>
+                  <option>其他</option>
+                </select>
+              </label>
+              <label>價格
+                <input name="price" type="number" inputmode="numeric" min="0" step="1" required>
+              </label>
+              <label class="third">容量/數量
+                <input name="unitQty" type="number" inputmode="decimal" min="0" step="0.01" placeholder="例如 2.4" required>
+              </label>
+              <label class="third">單位
+                <select name="unit">
+                  <option>kg</option>
+                  <option>g</option>
+                  <option>L</option>
+                  <option>ml</option>
+                  <option>包</option>
+                  <option>入</option>
+                  <option>件</option>
+                </select>
+              </label>
+              <label class="third">特價結束
+                <input name="promoEnd" type="date">
+              </label>
+              <label class="full">備註
+                <textarea name="note" placeholder="例如：買一送一、第二件五折、會員限定"></textarea>
+              </label>
+              <div class="actions">
+                <button class="btn secondary" type="submit">新增比價</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card span-7">
+            <h2>最低價與即將到期</h2>
+            <div class="tabs">
+              <button class="active" data-price-filter="all">全部</button>
+              <button data-price-filter="best">每品項最低</button>
+              <button data-price-filter="ending">特價快結束</button>
+            </div>
+            <div id="priceList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="receipts" class="section">
+        <div class="grid">
+          <div class="card span-5">
+            <h2>電子發票 / 支出記帳</h2>
+            <form class="form" id="txForm">
+              <label>日期
+                <input name="date" type="date" required>
+              </label>
+              <label>店家
+                <select name="store">
+                  <option>家樂福</option>
+                  <option>康是美</option>
+                  <option>全聯</option>
+                  <option>小七</option>
+                  <option>全家</option>
+                  <option>OK</option>
+                  <option>萊爾富</option>
+                  <option>寶雅</option>
+                  <option>屈臣氏</option>
+                  <option>蝦皮</option>
+                  <option>momo</option>
+                  <option>菜市場</option>
+                  <option>其他</option>
+                </select>
+              </label>
+              <label>品項
+                <input name="item" placeholder="番茄 / 洗衣粉 / 外食" required>
+              </label>
+              <label>金額
+                <input name="amount" type="number" inputmode="numeric" min="0" step="1" required>
+              </label>
+              <label>類別
+                <select name="category">
+                  <option>食材</option>
+                  <option>日用品</option>
+                  <option>外食</option>
+                  <option>交通</option>
+                  <option>電話費</option>
+                  <option>醫療</option>
+                  <option>寵物</option>
+                  <option>娛樂</option>
+                  <option>機車</option>
+                  <option>盥洗</option>
+                  <option>清潔</option>
+                  <option>美容</option>
+                  <option>飲品</option>
+                  <option>家電</option>
+                  <option>文具</option>
+                  <option>書籍</option>
+                  <option>玩具</option>
+                  <option>旅遊</option>
+                  <option>AI</option>
+                  <option>園藝</option>
+                  <option>咖啡生豆</option>
+                  <option>咖啡包材</option>
+                  <option>衣服</option>
+                  <option>其他</option>
+                </select>
+              </label>
+              <label>付款方式
+                <select name="pay">
+                  <option>信用卡</option>
+                  <option>現金</option>
+                  <option>Line Pay</option>
+                  <option>街口</option>
+                  <option>轉帳</option>
+                  <option>其他</option>
+                </select>
+              </label>
+              <label class="full">發票截圖 / 收據照片
+                <input name="photo" type="file" accept="image/*">
+              </label>
+              <label class="full">備註
+                <textarea name="note" placeholder="可寫：買給誰、是否可報帳、是否為庫存補貨"></textarea>
+              </label>
+              <div class="actions">
+                <button class="btn light" type="button" id="parseTxPhotoBtn">AI 解析圖片</button>
+                <button class="btn secondary" type="submit">新增支出</button>
+              </div>
+              <div class="notice aiResult hidden" id="aiResult"></div>
+            </form>
+          </div>
+
+          <div class="card span-7">
+            <h2>貼上電子發票文字，快速拆帳</h2>
+            <div class="notice">
+              格式先用簡單規則：每一行最後一個數字會被當作金額。例：<br>
+              洗衣粉 189<br>
+              雞蛋 75<br>
+              青菜 50
+            </div>
+            <form class="form" id="bulkTxForm" style="margin-top:10px">
+              <label>日期
+                <input name="date" type="date" required>
+              </label>
+              <label>店家
+                <select name="store">
+                  <option>家樂福</option>
+                  <option>康是美</option>
+                  <option>全聯</option>
+                  <option>小七</option>
+                  <option>全家</option>
+                  <option>OK</option>
+                  <option>萊爾富</option>
+                  <option>寶雅</option>
+                  <option>屈臣氏</option>
+                  <option>蝦皮</option>
+                  <option>momo</option>
+                  <option>菜市場</option>
+                  <option>其他</option>
+                </select>
+              </label>
+              <label class="full">貼上 ChatGPT 整理結果
+                <textarea name="text" placeholder="店家：寶雅&#10;日期：2026-06-09&#10;類別：日用品&#10;康乃馨御守棉細緻柔棉 9片夜用36.5cm 78&#10;康乃馨御守棉細緻柔棉 9片夜用36.5cm 78"></textarea>
+              </label>
+              <div class="actions">
+                <button class="btn secondary" type="submit">拆成多筆支出</button>
+              </div>
+            </form>
+            <h3 style="margin-top:16px">本月支出</h3>
+            <div id="txList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="stock" class="section">
+        <div class="grid">
+          <div class="card span-5">
+            <h2>庫存 / 隨手筆記</h2>
+            <form class="form" id="stockForm">
+              <label>品項
+                <input name="item" placeholder="洗衣粉 / 米 / 衛生紙 / 貓砂" required>
+              </label>
+              <label>常買金額
+                <input name="price" type="number" inputmode="numeric" min="0" step="1" placeholder="預留金額">
+              </label>
+              <label class="third">目前狀態
+                <select name="status">
+                  <option value="ok">還夠</option>
+                  <option value="low">快沒了</option>
+                  <option value="buy">要買</option>
+                </select>
+              </label>
+              <label class="third">安全天數
+                <input name="leadDays" type="number" min="0" max="60" value="5">
+              </label>
+              <label class="third">預估週期，空白=自動學
+                <input name="manualCycle" type="number" min="1" max="365" placeholder="天">
+              </label>
+              <label class="full">備註
+                <textarea name="note" placeholder="例如：剩半包、下次等全聯特價、家樂福比較便宜"></textarea>
+              </label>
+              <div class="actions">
+                <button class="btn secondary" type="submit">新增庫存品</button>
+              </div>
+            </form>
+          </div>
+          <div class="card span-7">
+            <h2>補貨預測</h2>
+            <div id="stockList" class="list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="settings" class="section">
+        <div class="grid">
+          <div class="card span-6">
+            <h2>資料管理</h2>
+            <div class="actions">
+              <button class="btn secondary" id="exportBtn2">匯出 JSON 備份</button>
+              <button class="btn secondary" id="exportCsvBtn">匯出 CSV</button>
+              <button class="btn light" id="clearBtn">清空所有資料</button>
+            </div>
+            <p class="hint">資料會同步到 Supabase，同一個家庭帳本成員登入後會看到同一份資料。圖片只送去 AI 解析，不會保存到 Supabase。</p>
+          </div>
+          <div class="card span-6">
+            <h2>放手機桌面的方式</h2>
+            <div class="notice">
+              GitHub Pages 負責前端，Supabase 負責登入與資料同步。手機用 Chrome/Safari 開網址後，選「加入主畫面」即可像 App 使用。
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <nav>
+    <button class="active" data-target="home">總覽</button>
+    <button data-target="months">月表</button>
+    <button data-target="budget">固定</button>
+    <button data-target="prices">比價</button>
+    <button data-target="receipts">記帳</button>
+    <button data-target="stock">庫存</button>
+    <button data-target="settings">設定</button>
+  </nav>
+
+  <div class="installPrompt card" id="installBox">
+    <h3>可加入手機桌面</h3>
+    <p class="hint">瀏覽器已偵測到可安裝。點擊加入後會像 App 一樣開啟。</p>
+    <div class="actions">
+      <button class="btn secondary" id="installBtn">加入桌面</button>
+      <button class="btn light" id="dismissInstall">先不要</button>
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./app-config.js"></script>
+<script>
+(() => {
+  const todayISO = () => new Date().toISOString().slice(0,10);
+  const monthISO = (d = new Date()) => d.toISOString().slice(0,7);
+  const money = n => "$" + Math.round(Number(n || 0)).toLocaleString("zh-TW");
+  const uid = () => crypto?.randomUUID?.() || String(Date.now()) + Math.random().toString(16).slice(2);
+  const parseMonth = s => s ? Number(s.replace("-","")) : null;
+  const currentMonthNum = () => Number(monthISO().replace("-",""));
+  const daysBetween = (a,b) => Math.round((new Date(b) - new Date(a)) / 86400000);
+  const addDays = (date, days) => {
+    const d = new Date(date);
+    d.setDate(d.getDate() + Number(days || 0));
+    return d.toISOString().slice(0,10);
+  };
+  const clampDayDate = (ym, day) => {
+    const [y,m] = ym.split("-").map(Number);
+    const last = new Date(y, m, 0).getDate();
+    return `${ym}-${String(Math.min(Number(day || 1), last)).padStart(2,"0")}`;
+  };
+  const defaultData = {
+    incomes: [],
+    incomeActuals: [],
+    recurring: [],
+    prices: [],
+    transactions: [],
+    stock: []
+  };
+  const appConfig = window.HAPPY_FAMILY_CONFIG || {};
+  const hasSupabaseConfig = Boolean(appConfig.supabaseUrl && appConfig.supabaseAnonKey);
+  const supabase = hasSupabaseConfig ? window.supabase.createClient(appConfig.supabaseUrl, appConfig.supabaseAnonKey) : null;
+  const parseReceiptFunctionName = appConfig.parseReceiptFunctionName || "parse-receipt";
+  let db = structuredClone(defaultData);
+  let currentUser = null;
+  let household = null;
+  let realtimeChannel = null;
+  let lastRemoteUpdatedAt = "";
+  let currentPriceFilter = "all";
+  let selectedMonthForPanel = monthISO();
+  let deferredPrompt = null;
+
+  function setAppMode(signedIn){
+    document.body.classList.toggle("signed-out", !signedIn);
+    document.getElementById("authPanel")?.classList.toggle("hidden", signedIn);
+  }
+  function setSyncStatus(text, state = ""){
+    setText("syncStatus", text);
+    const dot = document.getElementById("syncDot");
+    if(dot) dot.className = `syncDot ${state}`;
+  }
+  function showAuthNotice(text, danger = false){
+    const el = document.getElementById("authNotice");
+    if(!el) return;
+    el.textContent = text;
+    el.classList.remove("hidden", "dangerBox", "okBox");
+    el.classList.add(danger ? "dangerBox" : "okBox");
+  }
+  function stripImages(data){
+    const cleaned = { ...structuredClone(defaultData), ...structuredClone(data || {}) };
+    for(const collection of Object.keys(defaultData)){
+      cleaned[collection] = (cleaned[collection] || []).map(row => ({
+        ...row,
+        householdId: row.householdId || household?.id || ""
+      }));
+    }
+    for(const collection of ["prices","transactions"]){
+      cleaned[collection] = (cleaned[collection] || []).map(row => ({
+        ...Object.fromEntries(Object.entries(row).filter(([key]) => !["photo","imageSavedAt","imageExpiredAt"].includes(key))),
+        householdId: row.householdId || household?.id || ""
+      }));
+    }
+    return cleaned;
+  }
+  async function save(){
+    if(!supabase || !household){
+      render();
+      return;
+    }
+    try{
+      setSyncStatus("同步中", "");
+      db = stripImages(db);
+      const { data, error } = await supabase
+        .from("cashflow_books")
+        .upsert({
+          household_id: household.id,
+          data: db,
+          updated_by: currentUser?.id || null,
+          updated_at: new Date().toISOString()
+        }, { onConflict:"household_id" })
+        .select("updated_at")
+        .single();
+      if(error) throw error;
+      lastRemoteUpdatedAt = data?.updated_at || new Date().toISOString();
+      setSyncStatus(`已同步：${household.invite_code}`, "ok");
+    }catch(err){
+      console.error(err);
+      setSyncStatus("同步失敗", "bad");
+      alert(`同步失敗：${err.message || err}`);
+    }
+    render();
+  }
+  async function loadBook(){
+    if(!supabase || !household) return;
+    const { data, error } = await supabase
+      .from("cashflow_books")
+      .select("data,updated_at")
+      .eq("household_id", household.id)
+      .maybeSingle();
+    if(error) throw error;
+    db = stripImages(data?.data || defaultData);
+    lastRemoteUpdatedAt = data?.updated_at || "";
+    render();
+    setSyncStatus(`已同步：${household.invite_code}`, "ok");
+  }
+  async function refreshFromCloud(){
+    if(!supabase || !household) return;
+    try{
+      await loadBook();
+    }catch(err){
+      console.error(err);
+      setSyncStatus("重新整理失敗", "bad");
+    }
+  }
+  function subscribeToHousehold(){
+    if(!supabase || !household) return;
+    if(realtimeChannel) supabase.removeChannel(realtimeChannel);
+    realtimeChannel = supabase
+      .channel(`cashflow-book-${household.id}`)
+      .on("postgres_changes", {
+        event:"*",
+        schema:"public",
+        table:"cashflow_books",
+        filter:`household_id=eq.${household.id}`
+      }, payload => {
+        const updatedAt = payload.new?.updated_at || "";
+        if(updatedAt && updatedAt !== lastRemoteUpdatedAt){
+          db = stripImages(payload.new?.data || defaultData);
+          lastRemoteUpdatedAt = updatedAt;
+          render();
+          setSyncStatus(`已同步：${household.invite_code}`, "ok");
+        }
+      })
+      .subscribe();
+  }
+  async function getOrCreateHousehold(inviteCode = ""){
+    const cleanedCode = inviteCode.trim().toUpperCase();
+    if(cleanedCode){
+      const { data: target, error: targetError } = await supabase
+        .from("households")
+        .select("id,name,invite_code")
+        .eq("invite_code", cleanedCode)
+        .maybeSingle();
+      if(targetError) throw targetError;
+      if(!target) throw new Error("找不到這個家庭邀請碼。");
+      await supabase.from("household_members").upsert({
+        household_id: target.id,
+        user_id: currentUser.id,
+        role:"member"
+      }, { onConflict:"household_id,user_id" });
+      return target;
+    }
+
+    const { data: member, error: memberError } = await supabase
+      .from("household_members")
+      .select("household_id,households(id,name,invite_code)")
+      .eq("user_id", currentUser.id)
+      .limit(1)
+      .maybeSingle();
+    if(memberError) throw memberError;
+    if(member?.households) return member.households;
+
+    const invite_code = Math.random().toString(36).slice(2, 8).toUpperCase();
+    const { data: created, error: createError } = await supabase
+      .from("households")
+      .insert({ name:"幸福小家", invite_code })
+      .select("id,name,invite_code")
+      .single();
+    if(createError) throw createError;
+    const { error: joinError } = await supabase.from("household_members").insert({
+      household_id: created.id,
+      user_id: currentUser.id,
+      role:"owner"
+    });
+    if(joinError) throw joinError;
+    await supabase.from("cashflow_books").insert({
+      household_id: created.id,
+      data: defaultData,
+      updated_by: currentUser.id
+    });
+    return created;
+  }
+  async function bootstrapSession(){
+    if(!hasSupabaseConfig){
+      setAppMode(false);
+      showAuthNotice("尚未設定 Supabase。請先在 app-config.js 填入 supabaseUrl 與 supabaseAnonKey。", true);
+      setSyncStatus("未設定", "bad");
+      return;
+    }
+    const { data: { session } } = await supabase.auth.getSession();
+    currentUser = session?.user || null;
+    if(!currentUser){
+      setAppMode(false);
+      setSyncStatus("尚未登入", "");
+      return;
+    }
+    setAppMode(true);
+    setSyncStatus("讀取中", "");
+    household = await getOrCreateHousehold();
+    await loadBook();
+    subscribeToHousehold();
+  }
+  function resetForms(){
+    document.querySelectorAll("form").forEach(f => {
+      [...f.elements].forEach(el => {
+        if(el.type === "date" && el.name === "date") el.value = todayISO();
+        if(el.type === "month" && (el.name === "start" || el.name === "month")) el.value = monthISO();
+      });
+    });
+  }
+  function activeInMonth(row, ym = monthISO()){
+    const m = Number(ym.replace("-",""));
+    const start = parseMonth(row.start) || 0;
+    const end = parseMonth(row.end) || 999999;
+    return m >= start && m <= end;
+  }
+  async function fileToDataURL(file, maxSide = 520, quality = .58){
+    if(!file) return "";
+    const dataUrl = await new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.readAsDataURL(file);
+    });
+    return await new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.onerror = () => resolve(dataUrl);
+      img.src = dataUrl;
+    });
+  }
+  async function analyzeReceiptFile(file){
+    if(!file) throw new Error("請先選擇一張發票截圖或收據照片。");
+    if(!supabase) throw new Error("尚未設定 Supabase，無法呼叫圖片解析。");
+    const image = await fileToDataURL(file, 1400, .82);
+    const { data, error } = await supabase.functions.invoke(parseReceiptFunctionName, {
+      body: { image }
+    });
+    if(error) throw error;
+    return data;
+  }
+  function fillTxFormFromAi(form, parsed){
+    if(!parsed) return;
+    if(parsed.date) form.elements.date.value = parsed.date;
+    if(parsed.store){
+      const storeSelect = form.elements.store;
+      const hasStore = [...storeSelect.options].some(o => o.value === parsed.store || o.textContent === parsed.store);
+      storeSelect.value = hasStore ? parsed.store : "其他";
+      storeSelect.dispatchEvent(new Event("change"));
+      const custom = form.elements.customStore;
+      if(custom && !hasStore) custom.value = parsed.store;
+    }
+    const items = Array.isArray(parsed.items) ? parsed.items : [];
+    if(items.length === 1){
+      form.elements.item.value = items[0].item || "";
+      form.elements.amount.value = Number(items[0].amount || 0);
+      form.elements.category.value = parsed.category || guessCategory(items[0].item || "");
+      return;
+    }
+    const bulkText = [
+      parsed.store ? `店家：${parsed.store}` : "",
+      parsed.date ? `日期：${parsed.date}` : "",
+      parsed.category ? `類別：${parsed.category}` : "",
+      ...items.map(x => `${x.item || "未命名"} ${Number(x.amount || 0)}`)
+    ].filter(Boolean).join("\n");
+    const bulk = document.querySelector("#bulkTxForm textarea[name='text']");
+    if(bulk) bulk.value = bulkText;
+  }
+  function serializeForm(form){
+    return Object.fromEntries(new FormData(form).entries());
+  }
+  function addRow(collection, row){
+    db[collection].push({ id: uid(), householdId: household?.id || "", createdAt: new Date().toISOString(), ...row });
+    save();
+  }
+  function removeRow(collection, id){
+    db[collection] = db[collection].filter(x => x.id !== id);
+    save();
+  }
+  function updateStockFromPurchase(item, amount, date){
+    const name = (item || "").trim();
+    if(!name) return;
+    const found = db.stock.find(x => x.item.trim() === name);
+    if(found){
+      found.lastBought = date;
+      if(amount) found.price = amount;
+      found.status = "ok";
+    }else{
+      db.stock.push({
+        id: uid(),
+        createdAt: new Date().toISOString(),
+        item: name,
+        price: amount || 0,
+        status: "ok",
+        leadDays: 5,
+        manualCycle: "",
+        note: "由支出記帳自動建立"
+      });
+    }
+  }
+  function purchaseDatesFor(item){
+    return db.transactions
+      .filter(t => (t.item || "").trim() === (item || "").trim())
+      .map(t => t.date)
+      .filter(Boolean)
+      .sort();
+  }
+  function avgCycle(item){
+    const stock = db.stock.find(x => x.item === item);
+    if(stock?.manualCycle) return Number(stock.manualCycle);
+    const dates = purchaseDatesFor(item);
+    if(dates.length < 2) return null;
+    const gaps = [];
+    for(let i=1;i<dates.length;i++){
+      const gap = daysBetween(dates[i-1], dates[i]);
+      if(gap > 0 && gap < 366) gaps.push(gap);
+    }
+    if(!gaps.length) return null;
+    return Math.round(gaps.reduce((a,b)=>a+b,0) / gaps.length);
+  }
+  function latestPurchaseDate(item){
+    const dates = purchaseDatesFor(item);
+    return dates.at(-1) || null;
+  }
+  function reserveAmount(){
+    return db.stock.reduce((sum, s) => {
+      const next = nextBuyDate(s);
+      const lead = Number(s.leadDays || 0);
+      const urgent = s.status === "buy" || s.status === "low" || (next && daysBetween(todayISO(), next) <= lead);
+      return sum + (urgent ? Number(s.price || avgItemPrice(s.item) || 0) : 0);
+    },0);
+  }
+  function avgItemPrice(item){
+    const rows = db.transactions.filter(t => t.item === item && Number(t.amount) > 0);
+    if(!rows.length) return 0;
+    return Math.round(rows.reduce((s,t)=>s+Number(t.amount),0) / rows.length);
+  }
+  function nextBuyDate(stock){
+    const cycle = avgCycle(stock.item);
+    const last = latestPurchaseDate(stock.item) || stock.lastBought;
+    if(!cycle || !last) return null;
+    return addDays(last, cycle);
+  }
+  function getMonthlyPlan(ym = monthISO()){
+    const activeSources = db.incomes.filter(x => activeInMonth(x,ym) && x.status !== "paused");
+    const incomes = activeSources.map(x => {
+      const actual = getIncomeActual(x.id, ym);
+      const hasActual = !!actual;
+      const amount = hasActual ? Number(actual.amount || 0) : Number(x.amount || 0);
+      return {
+        date: clampDayDate(ym,x.day),
+        type: hasActual ? (actual.received === "yes" ? "實收" : "收入預估") : "收入預估",
+        name: x.name,
+        amount,
+        plannedAmount:Number(x.amount || 0),
+        actualAmount:hasActual ? Number(actual.amount || 0) : null,
+        received:actual?.received || ""
+      };
+    });
+    const fixed = db.recurring.filter(x => activeInMonth(x,ym)).map(x => ({
+      date: clampDayDate(ym,x.day),
+      type:x.type === "installment" ? "分期" : "固定",
+      name:x.name,
+      amount:-Number(x.amount || 0)
+    }));
+    return [...incomes, ...fixed].sort((a,b)=>a.date.localeCompare(b.date));
+  }
+
+  function getIncomeActual(sourceId, ym = monthISO()){
+    return db.incomeActuals.find(x => x.sourceId === sourceId && x.month === ym) || null;
+  }
+
+  function plannedIncomeForMonth(ym = monthISO()){
+    return db.incomes
+      .filter(x => activeInMonth(x,ym) && x.status !== "paused")
+      .reduce((s,x)=>s+Number(x.amount || 0),0);
+  }
+
+  function actualIncomeForMonth(ym = monthISO()){
+    return db.incomes
+      .filter(x => activeInMonth(x,ym) && x.status !== "paused")
+      .reduce((s,x)=>{
+        const actual = getIncomeActual(x.id, ym);
+        return s + Number(actual ? actual.amount : x.amount || 0);
+      },0);
+  }
+  function addMonthsToYm(ym, offset){
+    const [y,m] = ym.split("-").map(Number);
+    const d = new Date(y, m - 1 + Number(offset || 0), 1);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+  }
+
+  function monthLabel(ym){
+    const [y,m] = ym.split("-");
+    return `${y}/${m}`;
+  }
+
+  function transactionsForMonth(ym){
+    return db.transactions.filter(t => (t.date || "").startsWith(ym));
+  }
+
+  function reserveForMonth(ym){
+    const currentYm = monthISO();
+    return db.stock.reduce((sum, s) => {
+      const next = nextBuyDate(s);
+      const price = Number(s.price || avgItemPrice(s.item) || 0);
+      if(!price) return sum;
+      if(next && next.startsWith(ym)) return sum + price;
+      if(!next && ym === currentYm && (s.status === "buy" || s.status === "low")) return sum + price;
+      return sum;
+    },0);
+  }
+
+  function monthBreakdown(ym){
+    const plan = getMonthlyPlan(ym);
+    const incomeRows = plan.filter(x => x.amount > 0);
+    const fixedRows = plan.filter(x => x.amount < 0);
+    const income = incomeRows.reduce((s,x)=>s+Number(x.amount || 0),0);
+    const plannedIncome = plannedIncomeForMonth(ym);
+    const fixed = Math.abs(fixedRows.reduce((s,x)=>s+Number(x.amount || 0),0));
+    const txs = transactionsForMonth(ym);
+    const spend = txs.reduce((s,t)=>s+Number(t.amount || 0),0);
+    const reserve = reserveForMonth(ym);
+    const beforeDailySpend = income - fixed - reserve;
+    const afterRecordedSpend = income - fixed - reserve - spend;
+    return { ym, incomeRows, fixedRows, income, plannedIncome, fixed, spend, reserve, beforeDailySpend, afterRecordedSpend };
+  }
+
+  function monthsUntilYearEnd(startYm = monthISO()){
+    const [year, startMonth] = startYm.split("-").map(Number);
+    const months = [];
+    for(let m = startMonth; m <= 12; m++){
+      months.push(`${year}-${String(m).padStart(2,"0")}`);
+    }
+    return months;
+  }
+
+  function renderMonthTable(){
+    const select = document.getElementById("monthSelect");
+    const panel = document.getElementById("monthPanel");
+    if(!select || !panel) return;
+
+    const months = monthsUntilYearEnd(monthISO());
+    if(!months.includes(selectedMonthForPanel)){
+      selectedMonthForPanel = months[0] || monthISO();
+    }
+
+    const currentValue = select.value || selectedMonthForPanel;
+    select.innerHTML = months.map(ym => `
+      <option value="${ym}">${monthLabel(ym)}</option>
+    `).join("");
+    select.value = months.includes(currentValue) ? currentValue : selectedMonthForPanel;
+    selectedMonthForPanel = select.value;
+
+    const r = monthBreakdown(selectedMonthForPanel);
+    const incomeDelta = r.income - r.plannedIncome;
+    const tight = r.beforeDailySpend < 0;
+
+    panel.innerHTML = `
+      <div class="monthPanelTitle">
+        <h3>${monthLabel(r.ym)} 月表</h3>
+        ${tight ? `<span class="tag danger">現金流偏緊</span>` : `<span class="tag ok">現金流可控</span>`}
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><small>收入</small><b>${money(r.income)}</b><br><span class="hint">預估差額：${incomeDelta >= 0 ? "+" : ""}${money(incomeDelta)}</span></div>
+        <div class="kpi"><small>固定/分期/信貸</small><b>${money(r.fixed)}</b></div>
+        <div class="kpi"><small>補貨預留</small><b>${money(r.reserve)}</b></div>
+        <div class="kpi"><small>可用餘額</small><b>${money(r.beforeDailySpend)}</b></div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>區塊</th>
+            <th>項目</th>
+            <th>狀態/日期</th>
+            <th>金額</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${r.incomeRows.length ? r.incomeRows.map(x => `
+            <tr>
+              <td>收入</td>
+              <td>${esc(x.name)}</td>
+              <td>${esc(x.type)}｜${esc(x.date)}</td>
+              <td>${money(x.amount)}</td>
+            </tr>
+          `).join("") : `<tr><td>收入</td><td colspan="3">本月無收入設定</td></tr>`}
+
+          ${r.fixedRows.length ? r.fixedRows.map(x => `
+            <tr>
+              <td>${x.type === "分期" ? "分期/信貸" : "固定支出"}</td>
+              <td>${esc(x.name)}</td>
+              <td>${esc(x.type)}｜${esc(x.date)}</td>
+              <td>${money(Math.abs(x.amount))}</td>
+            </tr>
+          `).join("") : `<tr><td>固定支出</td><td colspan="3">本月無固定支出</td></tr>`}
+
+          <tr>
+            <td>補貨預留</td>
+            <td>依庫存預測</td>
+            <td>該月可能需要補貨</td>
+            <td>${money(r.reserve)}</td>
+          </tr>
+          <tr>
+            <td>已記帳</td>
+            <td>本月已登錄支出</td>
+            <td>只統計已輸入資料</td>
+            <td>${money(r.spend)}</td>
+          </tr>
+          <tr>
+            <th colspan="3">可用餘額，未扣日常已記帳支出</th>
+            <th>${money(r.beforeDailySpend)}</th>
+          </tr>
+          <tr>
+            <th colspan="3">扣除已記帳支出後</th>
+            <th>${money(r.afterRecordedSpend)}</th>
+          </tr>
+        </tbody>
+      </table>
+    `;
+  }
+
+  function currentMonthTransactions(){
+    const ym = monthISO();
+    return db.transactions.filter(t => (t.date || "").startsWith(ym));
+  }
+  function getBestPrices(){
+    const map = new Map();
+    for(const p of db.prices){
+      const key = `${p.item}|${p.unit}`.toLowerCase();
+      const unitPrice = Number(p.price || 0) / Number(p.unitQty || 1);
+      if(!map.has(key) || unitPrice < map.get(key).unitPrice){
+        map.set(key, { ...p, unitPrice });
+      }
+    }
+    return [...map.values()];
+  }
+  function upcomingPromos(days = 3){
+    const now = todayISO();
+    return db.prices
+      .filter(p => p.promoEnd && daysBetween(now, p.promoEnd) >= 0 && daysBetween(now, p.promoEnd) <= days)
+      .sort((a,b)=>a.promoEnd.localeCompare(b.promoEnd));
+  }
+  function stockWarnings(){
+    return db.stock.map(s => {
+      const next = nextBuyDate(s);
+      const lead = Number(s.leadDays || 0);
+      const days = next ? daysBetween(todayISO(), next) : null;
+      const urgent = s.status === "buy" || s.status === "low" || (days !== null && days <= lead);
+      return { ...s, next, days, urgent, cycle: avgCycle(s.item) };
+    }).filter(s => s.urgent);
+  }
+  function render(){
+    setupCustomStoreFields();
+    renderDashboard();
+    renderMonthTable();
+    renderBudget();
+    renderPrices();
+    renderTransactions();
+    renderStock();
+  }
+  function renderDashboard(){
+    const ym = monthISO();
+    const plan = getMonthlyPlan(ym);
+    const income = plan.filter(x=>x.amount>0).reduce((s,x)=>s+x.amount,0);
+    const plannedIncome = plannedIncomeForMonth(ym);
+    const incomeDelta = income - plannedIncome;
+    const fixed = Math.abs(plan.filter(x=>x.amount<0).reduce((s,x)=>s+x.amount,0));
+    const spend = currentMonthTransactions().reduce((s,t)=>s+Number(t.amount || 0),0);
+    const reserve = reserveAmount();
+    const balance = income - fixed - spend - reserve;
+    setText("kToday", formatTodayText());
+    setText("kTodayHint", `目前月份：${ym}`);
+    setText("kIncome", money(income));
+    setText("kPlannedIncome", money(plannedIncome));
+    setText("kIncomeDelta", (incomeDelta >= 0 ? "+" : "") + money(incomeDelta));
+    setText("kFixed", money(fixed));
+    setText("kSpend", money(spend));
+    setText("kBalance", money(balance));
+    setText("kReserve", money(reserve));
+    setText("kPromo", upcomingPromos().length);
+    setText("kStock", stockWarnings().length);
+    const balEl = document.getElementById("kBalance");
+    if(balEl){ balEl.className = "money " + (balance >= 0 ? "ok" : "bad"); }
+    const deltaEl = document.getElementById("kIncomeDelta");
+    if(deltaEl){ deltaEl.className = "money " + (incomeDelta >= 0 ? "ok" : "bad"); }
+
+    document.getElementById("cashflowTable").innerHTML = plan.length ? `
+      <table>
+        <thead><tr><th>日期</th><th>類型</th><th>項目</th><th>金額</th></tr></thead>
+        <tbody>${plan.map(x=>`
+          <tr>
+            <td>${x.date}</td><td>${x.type}</td><td>${esc(x.name)}</td>
+            <td>${x.amount > 0 ? "+" : ""}${money(x.amount)}</td>
+          </tr>`).join("")}
+          <tr><th colspan="3">本月已記帳消費</th><th>-${money(spend)}</th></tr>
+          <tr><th colspan="3">建議預留補貨</th><th>-${money(reserve)}</th></tr>
+        </tbody>
+      </table>` : `<div class="empty">尚未設定收入與固定支出。</div>`;
+
+    const alerts = [];
+    for(const p of upcomingPromos()){
+      alerts.push(`<div class="notice dangerBox"><b>${esc(p.item)}</b> 的 ${esc(p.store)} 特價 ${p.promoEnd} 結束。單位價約 ${money(Number(p.price)/Number(p.unitQty||1))}/${esc(p.unit)}。</div>`);
+    }
+    for(const s of stockWarnings()){
+      const nextText = s.next ? `預估 ${s.next} 要補` : `狀態為「${statusText(s.status)}」`;
+      alerts.push(`<div class="notice"><b>${esc(s.item)}</b> ${nextText}，建議預留 ${money(Number(s.price || avgItemPrice(s.item) || 0))}。</div>`);
+    }
+    document.getElementById("alerts").innerHTML = alerts.length ? alerts.join("<br>") : `<div class="notice okBox">目前沒有特價到期或補貨警示。</div>`;
+  }
+
+  function formatTodayText(){
+    const d = new Date();
+    const weekday = ["日","一","二","三","四","五","六"][d.getDay()];
+    return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,"0")}/${String(d.getDate()).padStart(2,"0")} 週${weekday}`;
+  }
+  function renderBudget(){
+    renderIncomeSourceOptions();
+    const ym = monthISO();
+    document.getElementById("incomeList").innerHTML = db.incomes.length ? db.incomes.map(x => {
+      const actual = getIncomeActual(x.id, ym);
+      const actualText = actual ? `｜本月${actual.received === "yes" ? "已入帳" : "更新預估"}：${money(actual.amount)}` : "｜本月尚未記錄實收";
+      return `<div class="item">
+        <div>
+          <strong>${esc(x.name)}</strong>
+          <div class="meta">
+            預估 ${money(x.amount)}｜每月 ${x.day} 日｜${incomeTypeText(x.incomeType)}｜${x.start || "無開始月"} ～ ${x.end || "持續"}｜${x.status === "paused" ? "暫停" : "啟用"}<br>
+            ${actualText}
+          </div>
+        </div>
+        <div class="row-actions">
+          <button class="icon" data-income-toggle="${x.id}">${x.status === "paused" ? "啟用" : "暫停"}</button>
+          <button class="icon" data-del="incomes:${x.id}">刪除</button>
+        </div>
+      </div>`;
+    }).join("") : `<div class="empty">尚未新增收入來源。</div>`;
+
+    document.getElementById("recurringList").innerHTML = db.recurring.length ? db.recurring.map(x => `
+      <div class="item">
+        <div>
+          <strong>${esc(x.name)}</strong>
+          <div class="meta">${money(x.amount)}｜每月 ${x.day} 日｜${esc(x.category)}｜${typeText(x.type)}｜${x.start || "無開始月"} ～ ${x.end || "持續"}</div>
+        </div>
+        <div class="row-actions"><button class="icon" data-del="recurring:${x.id}">刪除</button></div>
+      </div>`).join("") : `<div class="empty">尚未新增固定支出。</div>`;
+  }
+
+  function renderIncomeSourceOptions(){
+    const sel = document.getElementById("incomeSourceSelect");
+    if(!sel) return;
+    const current = sel.value;
+    sel.innerHTML = db.incomes.length
+      ? db.incomes.map(x => `<option value="${x.id}">${esc(x.name)}</option>`).join("")
+      : `<option value="">請先建立收入來源</option>`;
+    if([...sel.options].some(o=>o.value === current)) sel.value = current;
+  }
+
+  function incomeTypeText(t){
+    return ({stable:"長期固定",variable:"每月浮動",project:"短期專案",oneoff:"單月一次性"})[t] || "長期固定";
+  }
+  function renderPrices(){
+    let rows = [...db.prices].map(p => ({...p, unitPrice:Number(p.price||0)/Number(p.unitQty||1)}));
+    if(currentPriceFilter === "best") rows = getBestPrices();
+    if(currentPriceFilter === "ending") rows = upcomingPromos(7);
+    rows.sort((a,b)=>{
+      if(currentPriceFilter === "ending") return (a.promoEnd||"9999").localeCompare(b.promoEnd||"9999");
+      return (a.item || "").localeCompare(b.item || "","zh-Hant") || a.unitPrice - b.unitPrice;
+    });
+    document.getElementById("priceList").innerHTML = rows.length ? `
+      <div class="list">${rows.map(p => {
+        const days = p.promoEnd ? daysBetween(todayISO(), p.promoEnd) : null;
+        const tag = days !== null && days >= 0 && days <= 3 ? `<span class="tag danger">快結束：${days} 天</span>` : "";
+        return `<div class="item">
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <div>
+              <strong>${esc(p.item)}</strong>
+              <div class="meta">
+                ${esc(p.brand || "未填品牌")}｜${esc(p.store)}｜${money(p.price)} / ${esc(p.unitQty)}${esc(p.unit)}<br>
+                單位價：<b>${money(p.unitPrice)}</b> / ${esc(p.unit)}
+                ${p.promoEnd ? `｜特價到：${p.promoEnd}` : ""}
+              </div>
+              <span class="tag chai">${esc(p.store)}</span>${tag}
+              ${p.note ? `<div class="meta">${esc(p.note)}</div>` : ""}
+            </div>
+          </div>
+          <div class="row-actions">
+            <button class="icon" data-buy-price="${p.id}">轉記帳</button>
+            <button class="icon" data-del="prices:${p.id}">刪除</button>
+          </div>
+        </div>`;
+      }).join("")}</div>` : `<div class="empty">尚無比價紀錄。</div>`;
+  }
+  function renderTransactions(){
+    const rows = [...currentMonthTransactions()].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+    const byCat = rows.reduce((m,t)=>{
+      m[t.category] = (m[t.category] || 0) + Number(t.amount || 0);
+      return m;
+    },{});
+    const catHtml = Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<span class="tag">${esc(k)} ${money(v)}</span>`).join("");
+    document.getElementById("txList").innerHTML = `
+      <div style="margin-bottom:8px">${catHtml || `<span class="hint">本月尚無分類資料</span>`}</div>
+      ${rows.length ? `<table>
+        <thead><tr><th>日期</th><th>店家</th><th>品項</th><th>類別</th><th>金額</th><th></th></tr></thead>
+        <tbody>${rows.map(t=>`
+          <tr>
+            <td>${esc(t.date)}</td>
+            <td>${esc(t.store)}</td>
+            <td>${esc(t.item)}</td>
+            <td>${esc(t.category)}</td>
+            <td>${money(t.amount)}</td>
+            <td><button class="icon" data-del="transactions:${t.id}">刪</button></td>
+          </tr>`).join("")}</tbody>
+      </table>` : `<div class="empty">本月尚未記帳。</div>`}
+    `;
+  }
+  function renderStock(){
+    const rows = [...db.stock].map(s => ({
+      ...s,
+      cycle: avgCycle(s.item),
+      next: nextBuyDate(s),
+      avgPrice: avgItemPrice(s.item),
+      dates: purchaseDatesFor(s.item)
+    })).sort((a,b)=>{
+      const ad = a.next || "9999-99-99";
+      const bd = b.next || "9999-99-99";
+      return ad.localeCompare(bd);
+    });
+    document.getElementById("stockList").innerHTML = rows.length ? rows.map(s => {
+      const days = s.next ? daysBetween(todayISO(), s.next) : null;
+      const urgent = s.status === "buy" || s.status === "low" || (days !== null && days <= Number(s.leadDays || 0));
+      return `<div class="item">
+        <div>
+          <strong>${esc(s.item)}</strong>
+          <div class="meta">
+            狀態：${statusText(s.status)}｜安全天數：${s.leadDays || 0}｜建議預留：${money(Number(s.price || s.avgPrice || 0))}<br>
+            ${s.cycle ? `推估週期：約 ${s.cycle} 天` : `資料不足：至少需要兩次同品項購買紀錄`}
+            ${s.next ? `｜下次推估：${s.next}` : ""}
+          </div>
+          ${urgent ? `<span class="tag danger">需要注意</span>` : `<span class="tag ok">正常</span>`}
+          ${s.note ? `<div class="meta">${esc(s.note)}</div>` : ""}
+          ${s.dates.length ? `<div class="meta">購買紀錄：${s.dates.join("、")}</div>` : ""}
+        </div>
+        <div class="row-actions">
+          <button class="icon" data-stock-status="${s.id}:low">快沒了</button>
+          <button class="icon" data-stock-status="${s.id}:buy">要買</button>
+          <button class="icon" data-stock-status="${s.id}:ok">已補貨</button>
+          <button class="icon" data-del="stock:${s.id}">刪除</button>
+        </div>
+      </div>`;
+    }).join("") : `<div class="empty">尚未新增庫存品。</div>`;
+  }
+  function setText(id, text){
+    const el = document.getElementById(id);
+    if(el) el.textContent = text;
+  }
+  function esc(s){
+    return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  }
+  function typeText(t){
+    return ({fixed:"固定每月",installment:"分期/有結束日",variable:"浮動預估"})[t] || t;
+  }
+  function statusText(s){
+    return ({ok:"還夠",low:"快沒了",buy:"要買"})[s] || s;
+  }
+
+  function download(filename, content, type="application/json"){
+    const blob = new Blob([content], {type});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function setupCustomStoreFields(){
+    document.querySelectorAll('select[name="store"]').forEach(select => {
+      if(select.dataset.customStoreReady) return;
+      select.dataset.customStoreReady = "1";
+
+      const form = select.closest("form");
+      const label = select.closest("label");
+      if(!form || !label) return;
+
+      const customLabel = document.createElement("label");
+      customLabel.className = label.className + " customStoreLabel hidden";
+      customLabel.innerHTML = `自訂店家 / 餐廳 / 店名
+        <input name="customStore" placeholder="例如：三商巧福 / 金石堂 / 巷口早餐店">
+      `;
+
+      label.insertAdjacentElement("afterend", customLabel);
+
+      const update = () => {
+        const show = select.value === "其他";
+        customLabel.classList.toggle("hidden", !show);
+        const input = customLabel.querySelector("input");
+        if(input && !show) input.value = "";
+      };
+
+      select.addEventListener("change", update);
+      update();
+    });
+  }
+
+  function getFinalStore(v){
+    const custom = String(v.customStore || "").trim();
+    return v.store === "其他" && custom ? custom : v.store;
+  }
+
+  document.querySelectorAll("nav button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+      document.getElementById(btn.dataset.target).classList.add("active");
+      refreshFromCloud();
+      window.scrollTo({top:0,behavior:"smooth"});
+    });
+  });
+
+  document.getElementById("authForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    if(!supabase) return showAuthNotice("尚未設定 Supabase。", true);
+    const v = serializeForm(e.currentTarget);
+    try{
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email:v.email,
+        password:v.password
+      });
+      if(error) throw error;
+      currentUser = data.user;
+      household = await getOrCreateHousehold(v.inviteCode || "");
+      setAppMode(true);
+      await loadBook();
+      subscribeToHousehold();
+    }catch(err){
+      showAuthNotice(`登入失敗：${err.message || err}`, true);
+    }
+  });
+
+  document.getElementById("signupBtn").addEventListener("click", async () => {
+    if(!supabase) return showAuthNotice("尚未設定 Supabase。", true);
+    const form = document.getElementById("authForm");
+    const v = serializeForm(form);
+    try{
+      const { data, error } = await supabase.auth.signUp({
+        email:v.email,
+        password:v.password
+      });
+      if(error) throw error;
+      currentUser = data.user;
+      if(!data.session || !currentUser){
+        showAuthNotice("註冊完成，請先到信箱確認 Email 後再登入。");
+        return;
+      }
+      household = await getOrCreateHousehold(v.inviteCode || "");
+      setAppMode(true);
+      await loadBook();
+      subscribeToHousehold();
+    }catch(err){
+      showAuthNotice(`註冊 / 加入失敗：${err.message || err}`, true);
+    }
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    if(realtimeChannel) supabase.removeChannel(realtimeChannel);
+    await supabase?.auth.signOut();
+    currentUser = null;
+    household = null;
+    db = structuredClone(defaultData);
+    setAppMode(false);
+    setSyncStatus("尚未登入", "");
+  });
+
+  document.getElementById("incomeForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const f = e.currentTarget;
+    const v = serializeForm(f);
+    addRow("incomes", {
+      name:v.name.trim(),
+      amount:Number(v.amount || 0),
+      day:Number(v.day || 1),
+      start:v.start || monthISO(),
+      end:v.end || "",
+      incomeType:v.incomeType || "stable",
+      status:v.status || "active"
+    });
+    f.reset(); resetForms();
+  });
+
+  document.getElementById("incomeActualForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const f = e.currentTarget;
+    const v = serializeForm(f);
+    if(!v.sourceId){
+      alert("請先選擇收入來源。");
+      return;
+    }
+    const existed = db.incomeActuals.find(x => x.sourceId === v.sourceId && x.month === v.month);
+    if(existed){
+      existed.amount = Number(v.amount || 0);
+      existed.received = v.received || "yes";
+      existed.updatedAt = new Date().toISOString();
+    }else{
+      db.incomeActuals.push({
+        id:uid(),
+        createdAt:new Date().toISOString(),
+        sourceId:v.sourceId,
+        month:v.month,
+        amount:Number(v.amount || 0),
+        received:v.received || "yes"
+      });
+    }
+    save();
+    f.reset(); resetForms();
+  });
+
+  document.getElementById("recurringForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const f = e.currentTarget;
+    const v = serializeForm(f);
+    addRow("recurring", {
+      name:v.name.trim(),
+      amount:Number(v.amount || 0),
+      day:Number(v.day || 1),
+      start:v.start || monthISO(),
+      end:v.end || "",
+      type:v.type,
+      category:v.category
+    });
+    f.reset(); resetForms();
+  });
+
+  document.getElementById("priceForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const f = e.currentTarget;
+    const v = serializeForm(f);
+    addRow("prices", {
+      item:v.item.trim(),
+      brand:v.brand.trim(),
+      store:getFinalStore(v),
+      price:Number(v.price || 0),
+      unitQty:Number(v.unitQty || 1),
+      unit:v.unit,
+      promoEnd:v.promoEnd || "",
+      note:v.note.trim()
+    });
+    f.reset(); resetForms();
+  });
+
+  document.getElementById("txForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const f = e.currentTarget;
+    const v = serializeForm(f);
+    const tx = {
+      date:v.date || todayISO(),
+      store:getFinalStore(v),
+      item:v.item.trim(),
+      amount:Number(v.amount || 0),
+      category:v.category,
+      pay:v.pay,
+      note:v.note.trim()
+    };
+    db.transactions.push({ id:uid(), createdAt:new Date().toISOString(), ...tx });
+    updateStockFromPurchase(tx.item, tx.amount, tx.date);
+    save();
+    f.reset(); resetForms();
+  });
+
+  document.getElementById("parseTxPhotoBtn").addEventListener("click", async () => {
+    const form = document.getElementById("txForm");
+    const box = document.getElementById("aiResult");
+    const file = form.elements.photo.files[0];
+    try{
+      box.classList.remove("hidden", "dangerBox", "okBox");
+      box.classList.add("okBox");
+      box.textContent = "解析中...";
+      const parsed = await analyzeReceiptFile(file);
+      fillTxFormFromAi(form, parsed);
+      const count = Array.isArray(parsed?.items) ? parsed.items.length : 0;
+      box.textContent = count > 1
+        ? `已解析 ${count} 筆，已放到快速拆帳文字框。確認後請按「拆成多筆支出」。`
+        : "已解析並填入支出表單，確認後請按「新增支出」。";
+    }catch(err){
+      box.classList.remove("hidden", "okBox");
+      box.classList.add("dangerBox");
+      box.textContent = `解析失敗：${err.message || err}`;
+    }
+  });
+
+  document.getElementById("bulkTxForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const f = e.currentTarget;
+    const v = serializeForm(f);
+    const parsed = parseAiBillText(v.text || "");
+    const finalDate = parsed.date || v.date || todayISO();
+    const finalStore = parsed.store || getFinalStore(v);
+    const finalCategory = parsed.category || "";
+    let added = 0;
+
+    for(const row of parsed.items){
+      db.transactions.push({
+        id:uid(),
+        createdAt:new Date().toISOString(),
+        date:finalDate,
+        store:finalStore,
+        item:row.item,
+        amount:row.amount,
+        category:finalCategory || guessCategory(row.item),
+        pay:"未分類",
+        note:"由 ChatGPT 帳單整理匯入"
+      });
+      updateStockFromPurchase(row.item, row.amount, finalDate);
+      added++;
+    }
+
+    save();
+    alert(`已新增 ${added} 筆。無法判讀的行會略過。`);
+    f.reset(); resetForms();
+  });
+
+  function parseAiBillText(text){
+    const out = { store:"", date:"", category:"", items:[] };
+    const lines = String(text || "").split(/\n+/).map(x=>x.trim()).filter(Boolean);
+
+    for(let line of lines){
+      line = line.replace(/[，,]\s*/g, " ").trim();
+
+      const storeMatch = line.match(/^(店家|賣場|商店|商家)[:：]\s*(.+)$/);
+      if(storeMatch){ out.store = storeMatch[2].trim(); continue; }
+
+      const dateMatch = line.match(/^(日期|時間|消費日期)[:：]\s*(\d{4})[\/\-.](\d{1,2})[\/\-.](\d{1,2})/);
+      if(dateMatch){
+        out.date = `${dateMatch[2]}-${String(dateMatch[3]).padStart(2,"0")}-${String(dateMatch[4]).padStart(2,"0")}`;
+        continue;
+      }
+
+      const catMatch = line.match(/^(類別|分類)[:：]\s*(.+)$/);
+      if(catMatch){ out.category = catMatch[2].trim(); continue; }
+
+      if(/^(總金額|合計|小計|發票|載具|統編|手機條碼|交易|時間)[:：]?/.test(line)) continue;
+
+      const itemMatch = line.match(/^(.+?)\s+(?:NT\$|\$)?\s*(-?\d+(?:\.\d+)?)$/);
+      if(itemMatch){
+        out.items.push({
+          item:itemMatch[1].replace(/^[-•*]\s*/,"").trim(),
+          amount:Number(itemMatch[2])
+        });
+      }
+    }
+    return out;
+  }
+
+  document.getElementById("stockForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const f = e.currentTarget;
+    const v = serializeForm(f);
+    addRow("stock", {
+      item:v.item.trim(),
+      price:Number(v.price || 0),
+      status:v.status,
+      leadDays:Number(v.leadDays || 5),
+      manualCycle:v.manualCycle ? Number(v.manualCycle) : "",
+      note:v.note.trim()
+    });
+    f.reset(); resetForms();
+  });
+
+  function guessCategory(item){
+    const s = item.toLowerCase();
+    if(/電話費|電信|手機費|中華電信|遠傳|台灣大哥大|台哥大|亞太|台灣之星/.test(s)) return "電話費";
+    if(/汽油|機油|輪胎|安全帽|機車|車行|保養/.test(s)) return "機車";
+    if(/洗髮|沐浴|牙膏|牙刷|牙線|漱口|洗面乳|衛生棉|護墊/.test(s)) return "盥洗";
+    if(/洗衣|洗碗|清潔|漂白|刷子|抹布|垃圾袋|衛生紙|濕紙/.test(s)) return "清潔";
+    if(/保養|化妝|美容|面膜|精華|乳液|口紅|粉底|防曬/.test(s)) return "美容";
+    if(/飲料|茶|水|牛奶|豆漿|果汁|汽水|啤酒|咖啡/.test(s)) return "飲品";
+    if(/家電|電鍋|水冷扇|風扇|冰箱|洗衣機|烤箱|微波/.test(s)) return "家電";
+    if(/筆|紙|文具|資料夾|膠帶|便利貼|印表/.test(s)) return "文具";
+    if(/書|小說|雜誌|漫畫|電子書/.test(s)) return "書籍";
+    if(/玩具|模型|拼圖|娃娃|積木/.test(s)) return "玩具";
+    if(/旅遊|住宿|飯店|機票|車票|門票/.test(s)) return "旅遊";
+    if(/chatgpt|openai|claude|midjourney|ai|notion|canva/.test(s)) return "AI";
+    if(/園藝|花|土|肥料|種子|盆栽|植栽/.test(s)) return "園藝";
+    if(/生豆|咖啡生豆|green bean/.test(s)) return "咖啡生豆";
+    if(/濾掛|咖啡袋|包材|封口|貼紙|外袋|紙盒/.test(s)) return "咖啡包材";
+    if(/衣服|上衣|褲|裙|外套|內衣|襪|鞋/.test(s)) return "衣服";
+    if(/菜|肉|蛋|米|麵|水果|魚|雞|豬|牛|豆腐/.test(s)) return "食材";
+    if(/餐|便當|麵包/.test(s)) return "外食";
+    return "其他";
+  }
+
+  document.addEventListener("click", e => {
+    const del = e.target.dataset.del;
+    if(del){
+      const [collection,id] = del.split(":");
+      if(confirm("確定刪除？")) removeRow(collection,id);
+    }
+    const incomeToggle = e.target.dataset.incomeToggle;
+    if(incomeToggle){
+      const row = db.incomes.find(x => x.id === incomeToggle);
+      if(row){
+        row.status = row.status === "paused" ? "active" : "paused";
+        save();
+      }
+    }
+
+    const buyPrice = e.target.dataset.buyPrice;
+    if(buyPrice){
+      const p = db.prices.find(x=>x.id === buyPrice);
+      if(p){
+        db.transactions.push({
+          id:uid(),
+          createdAt:new Date().toISOString(),
+          date:todayISO(),
+          store:p.store,
+          item:p.item,
+          amount:Number(p.price || 0),
+          category:guessCategory(p.item),
+          pay:"未分類",
+          note:`由比價紀錄轉入：${p.brand || ""} ${p.note || ""}`.trim()
+        });
+        updateStockFromPurchase(p.item, p.price, todayISO());
+        save();
+        alert("已轉入本月支出。");
+      }
+    }
+    const status = e.target.dataset.stockStatus;
+    if(status){
+      const [id, val] = status.split(":");
+      const row = db.stock.find(x=>x.id === id);
+      if(row){
+        row.status = val;
+        if(val === "ok") row.lastBought = todayISO();
+        save();
+      }
+    }
+  });
+
+  document.querySelectorAll("[data-price-filter]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-price-filter]").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      currentPriceFilter = btn.dataset.priceFilter;
+      renderPrices();
+    });
+  });
+
+  function exportData(){
+    download(`family-cashflow-backup-${todayISO()}.json`, JSON.stringify(db,null,2));
+  }
+  function csvEscape(value){
+    const s = String(value ?? "");
+    return /[",\n\r]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s;
+  }
+  function rowsToCsv(title, rows){
+    if(!rows.length) return `${title}\n`;
+    const keys = [...new Set(rows.flatMap(row => Object.keys(row)))].filter(k => !["photo","imageSavedAt","imageExpiredAt"].includes(k));
+    return [
+      title,
+      keys.join(","),
+      ...rows.map(row => keys.map(k => csvEscape(row[k])).join(","))
+    ].join("\n");
+  }
+  function exportCsvData(){
+    const parts = Object.entries(db).map(([name, rows]) => rowsToCsv(`[${name}]`, rows || []));
+    download(`family-cashflow-${todayISO()}.csv`, "\ufeff" + parts.join("\n\n"), "text/csv;charset=utf-8");
+  }
+  document.getElementById("exportBtn").addEventListener("click", exportData);
+  document.getElementById("exportBtn2").addEventListener("click", exportData);
+  document.getElementById("exportCsvBtn").addEventListener("click", exportCsvData);
+  document.getElementById("importFile").addEventListener("change", async e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    try{
+      const text = await file.text();
+      const imported = JSON.parse(text);
+      db = { ...defaultData, ...imported };
+      save();
+      alert("匯入完成。");
+    }catch(err){
+      alert("匯入失敗，請確認是 JSON 備份檔。");
+    }
+  });
+  document.getElementById("clearBtn").addEventListener("click", () => {
+    if(confirm("確定清空所有資料？這不能復原。")){
+      db = structuredClone(defaultData);
+      save();
+    }
+  });
+  document.getElementById("seedBtn").addEventListener("click", () => {
+    const ym = monthISO();
+    db = {
+      incomes:[
+        {id:uid(),createdAt:new Date().toISOString(),name:"A單位長期收入",amount:30000,day:5,start:ym,end:"",incomeType:"stable",status:"active"},
+        {id:uid(),createdAt:new Date().toISOString(),name:"B單位三個月專案",amount:12000,day:15,start:ym,end:addMonthStr(ym,2),incomeType:"project",status:"active"},
+        {id:uid(),createdAt:new Date().toISOString(),name:"C單位浮動收入",amount:8000,day:25,start:ym,end:"",incomeType:"variable",status:"active"}
+      ],
+      incomeActuals:[],
+      recurring:[
+        {id:uid(),createdAt:new Date().toISOString(),name:"房租",amount:22000,day:1,start:ym,end:"",type:"fixed",category:"房租"},
+        {id:uid(),createdAt:new Date().toISOString(),name:"電費預估",amount:2200,day:20,start:ym,end:"",type:"variable",category:"水電瓦斯"},
+        {id:uid(),createdAt:new Date().toISOString(),name:"水冷扇分期",amount:1200,day:15,start:ym,end:addMonthStr(ym,5),type:"installment",category:"分期付款"},
+        {id:uid(),createdAt:new Date().toISOString(),name:"信用卡固定還款",amount:8000,day:25,start:ym,end:"",type:"fixed",category:"卡費"}
+      ],
+      prices:[
+        {id:uid(),createdAt:new Date().toISOString(),item:"洗衣粉",brand:"一匙靈",store:"家樂福",price:189,unitQty:2.4,unit:"kg",promoEnd:addDays(todayISO(),2),note:"會員價"},
+        {id:uid(),createdAt:new Date().toISOString(),item:"衛生紙",brand:"五月花",store:"全聯",price:299,unitQty:64,unit:"包",promoEnd:addDays(todayISO(),6),note:"箱購"}
+      ],
+      transactions:[
+        {id:uid(),createdAt:new Date().toISOString(),date:todayISO(),store:"菜市場",item:"青菜",amount:120,category:"食材",pay:"現金",note:""},
+        {id:uid(),createdAt:new Date().toISOString(),date:addDays(todayISO(),-20),store:"家樂福",item:"洗衣粉",amount:189,category:"日用品",pay:"信用卡",note:""},
+        {id:uid(),createdAt:new Date().toISOString(),date:addDays(todayISO(),-55),store:"全聯",item:"洗衣粉",amount:199,category:"日用品",pay:"信用卡",note:""}
+      ],
+      stock:[
+        {id:uid(),createdAt:new Date().toISOString(),item:"洗衣粉",price:189,status:"ok",leadDays:5,manualCycle:"",note:"用完前先看家樂福或全聯"},
+        {id:uid(),createdAt:new Date().toISOString(),item:"米",price:350,status:"low",leadDays:7,manualCycle:30,note:"月底前要補"}
+      ]
+    };
+    save();
+  });
+  function addMonthStr(ym, add){
+    const [y,m] = ym.split("-").map(Number);
+    const d = new Date(y, m - 1 + add, 1);
+    return d.toISOString().slice(0,7);
+  }
+
+  // PWA install prompt: useful only after hosting with proper manifest/service worker later.
+  window.addEventListener("beforeinstallprompt", e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById("installBox").classList.add("show");
+  });
+  document.getElementById("installBtn").addEventListener("click", async () => {
+    if(!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    document.getElementById("installBox").classList.remove("show");
+  });
+  document.getElementById("dismissInstall").addEventListener("click", () => {
+    document.getElementById("installBox").classList.remove("show");
+  });
+
+  function scheduleDailyRefresh(){
+    const now = new Date();
+    const next = new Date(now);
+    next.setHours(24, 0, 5, 0);
+    const ms = Math.max(1000, next - now);
+    setTimeout(() => {
+      render();
+      scheduleDailyRefresh();
+    }, ms);
+  }
+
+  setupCustomStoreFields();
+  resetForms();
+  setAppMode(false);
+  bootstrapSession().catch(err => {
+    console.error(err);
+    showAuthNotice(`初始化失敗：${err.message || err}`, true);
+    setSyncStatus("初始化失敗", "bad");
+  });
+
+  // 不用每分鐘刷新。日期與提醒只在以下情境更新：
+  // 1. 開啟頁面時
+  // 2. 回到頁面 / 手機重新切回 App 時
+  // 3. 每天跨日後自動刷新一次
+  window.addEventListener("focus", () => refreshFromCloud());
+  document.addEventListener("visibilitychange", () => {
+    if(!document.hidden) refreshFromCloud();
+  });
+  scheduleDailyRefresh();
+})();
+</script>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
