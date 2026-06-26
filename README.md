@@ -1,6 +1,8 @@
 # 幸福小家旺旺來 Supabase PWA
 
-小家庭共用記帳 PWA。前端可部署在 GitHub Pages，登入、家庭同步與帳本資料放在 Supabase。圖片只送到 Edge Function 做 AI 解析，不會存進 Supabase Storage 或資料庫。
+小家庭共用記帳 PWA。前端部署在 GitHub Pages，登入、家庭同步與帳本資料放在 Supabase。
+
+這一版不使用 OpenAI API，不建立圖片解析 Edge Function，也不提供圖片上傳自動辨識。
 
 ## 功能
 
@@ -8,7 +10,8 @@
 - 家庭邀請碼共用同一份帳本
 - 手機、電腦同步同一個 household 帳本
 - Supabase Realtime 只訂閱目前 household
-- 手動記帳與 AI 收據圖片解析共存
+- 手動記帳
+- 貼上文字後快速拆帳
 - 固定支出、房租、信貸、分期用規則自動產生月表
 - 匯出 JSON 備份與 CSV
 - PWA manifest 與 service worker
@@ -17,25 +20,16 @@
 
 1. 建立 Supabase project。
 2. 到 SQL Editor 執行 `supabase/schema.sql`。
-3. 到 Edge Functions 部署 `supabase/functions/parse-receipt`。
-4. 在 Edge Function Secrets 設定：
-
-```bash
-OPENAI_API_KEY=你的 OpenAI API key
-OPENAI_MODEL=gpt-4.1-mini
-```
-
-5. 複製 `app-config.example.js` 的內容到 `app-config.js`，填入：
+3. 複製 `app-config.example.js` 的內容到 `app-config.js`，填入：
 
 ```js
 window.HAPPY_FAMILY_CONFIG = {
   supabaseUrl: "https://YOUR_PROJECT_ID.supabase.co",
-  supabaseAnonKey: "YOUR_SUPABASE_ANON_KEY",
-  parseReceiptFunctionName: "parse-receipt"
+  supabaseAnonKey: "YOUR_SUPABASE_ANON_KEY"
 };
 ```
 
-`supabaseAnonKey` 可以放前端；不要把 `service_role` key 或 OpenAI API key 放進前端。
+`supabaseAnonKey` 可以放前端；不要把 `service_role` key 放進前端。
 
 ## 家庭同步使用方式
 
@@ -61,4 +55,3 @@ window.HAPPY_FAMILY_CONFIG = {
 - `manifest.json`：PWA manifest
 - `service-worker.js`：快取 GitHub Pages 前端資源
 - `supabase/schema.sql`：資料表、RLS、Realtime 設定
-- `supabase/functions/parse-receipt/index.ts`：AI 圖片解析 Edge Function

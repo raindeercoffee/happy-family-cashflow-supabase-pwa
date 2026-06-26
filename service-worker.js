@@ -1,4 +1,4 @@
-const CACHE_NAME = "happy-family-cashflow-supabase-v1";
+const CACHE_NAME = "happy-family-cashflow-supabase-v2-no-image-ai";
 const ASSETS = [
   "./",
   "./index.html",

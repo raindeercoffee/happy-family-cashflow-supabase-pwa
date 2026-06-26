@@ -453,10 +453,6 @@
     }
     .syncDot.ok{background:var(--ok)}
     .syncDot.bad{background:var(--danger)}
-    .aiResult{
-      white-space:pre-wrap;
-      margin-top:8px;
-    }
     .customStoreLabel{
       transition:opacity .18s ease;
     }
@@ -870,17 +866,12 @@
                   <option>其他</option>
                 </select>
               </label>
-              <label class="full">發票截圖 / 收據照片
-                <input name="photo" type="file" accept="image/*">
-              </label>
               <label class="full">備註
                 <textarea name="note" placeholder="可寫：買給誰、是否可報帳、是否為庫存補貨"></textarea>
               </label>
               <div class="actions">
-                <button class="btn light" type="button" id="parseTxPhotoBtn">AI 解析圖片</button>
                 <button class="btn secondary" type="submit">新增支出</button>
               </div>
-              <div class="notice aiResult hidden" id="aiResult"></div>
             </form>
           </div>
 
@@ -913,7 +904,7 @@
                   <option>其他</option>
                 </select>
               </label>
-              <label class="full">貼上 ChatGPT 整理結果
+              <label class="full">貼上文字整理結果
                 <textarea name="text" placeholder="店家：寶雅&#10;日期：2026-06-09&#10;類別：日用品&#10;康乃馨御守棉細緻柔棉 9片夜用36.5cm 78&#10;康乃馨御守棉細緻柔棉 9片夜用36.5cm 78"></textarea>
               </label>
               <div class="actions">
@@ -974,7 +965,7 @@
               <button class="btn secondary" id="exportCsvBtn">匯出 CSV</button>
               <button class="btn light" id="clearBtn">清空所有資料</button>
             </div>
-            <p class="hint">資料會同步到 Supabase，同一個家庭帳本成員登入後會看到同一份資料。圖片只送去 AI 解析，不會保存到 Supabase。</p>
+            <p class="hint">資料會同步到 Supabase，同一個家庭帳本成員登入後會看到同一份資料。不提供圖片上傳或自動辨識。</p>
           </div>
           <div class="card span-6">
             <h2>放手機桌面的方式</h2>
@@ -1038,7 +1029,6 @@
   const appConfig = window.HAPPY_FAMILY_CONFIG || {};
   const hasSupabaseConfig = Boolean(appConfig.supabaseUrl && appConfig.supabaseAnonKey);
   const supabase = hasSupabaseConfig ? window.supabase.createClient(appConfig.supabaseUrl, appConfig.supabaseAnonKey) : null;
-  const parseReceiptFunctionName = appConfig.parseReceiptFunctionName || "parse-receipt";
   let db = structuredClone(defaultData);
   let currentUser = null;
   let household = null;
@@ -1069,12 +1059,6 @@
     for(const collection of Object.keys(defaultData)){
       cleaned[collection] = (cleaned[collection] || []).map(row => ({
         ...row,
-        householdId: row.householdId || household?.id || ""
-      }));
-    }
-    for(const collection of ["prices","transactions"]){
-      cleaned[collection] = (cleaned[collection] || []).map(row => ({
-        ...Object.fromEntries(Object.entries(row).filter(([key]) => !["photo","imageSavedAt","imageExpiredAt"].includes(key))),
         householdId: row.householdId || household?.id || ""
       }));
     }
@@ -1231,65 +1215,6 @@
     const start = parseMonth(row.start) || 0;
     const end = parseMonth(row.end) || 999999;
     return m >= start && m <= end;
-  }
-  async function fileToDataURL(file, maxSide = 520, quality = .58){
-    if(!file) return "";
-    const dataUrl = await new Promise(resolve => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.readAsDataURL(file);
-    });
-    return await new Promise(resolve => {
-      const img = new Image();
-      img.onload = () => {
-        const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
-        const canvas = document.createElement("canvas");
-        canvas.width = Math.round(img.width * scale);
-        canvas.height = Math.round(img.height * scale);
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL("image/jpeg", quality));
-      };
-      img.onerror = () => resolve(dataUrl);
-      img.src = dataUrl;
-    });
-  }
-  async function analyzeReceiptFile(file){
-    if(!file) throw new Error("請先選擇一張發票截圖或收據照片。");
-    if(!supabase) throw new Error("尚未設定 Supabase，無法呼叫圖片解析。");
-    const image = await fileToDataURL(file, 1400, .82);
-    const { data, error } = await supabase.functions.invoke(parseReceiptFunctionName, {
-      body: { image }
-    });
-    if(error) throw error;
-    return data;
-  }
-  function fillTxFormFromAi(form, parsed){
-    if(!parsed) return;
-    if(parsed.date) form.elements.date.value = parsed.date;
-    if(parsed.store){
-      const storeSelect = form.elements.store;
-      const hasStore = [...storeSelect.options].some(o => o.value === parsed.store || o.textContent === parsed.store);
-      storeSelect.value = hasStore ? parsed.store : "其他";
-      storeSelect.dispatchEvent(new Event("change"));
-      const custom = form.elements.customStore;
-      if(custom && !hasStore) custom.value = parsed.store;
-    }
-    const items = Array.isArray(parsed.items) ? parsed.items : [];
-    if(items.length === 1){
-      form.elements.item.value = items[0].item || "";
-      form.elements.amount.value = Number(items[0].amount || 0);
-      form.elements.category.value = parsed.category || guessCategory(items[0].item || "");
-      return;
-    }
-    const bulkText = [
-      parsed.store ? `店家：${parsed.store}` : "",
-      parsed.date ? `日期：${parsed.date}` : "",
-      parsed.category ? `類別：${parsed.category}` : "",
-      ...items.map(x => `${x.item || "未命名"} ${Number(x.amount || 0)}`)
-    ].filter(Boolean).join("\n");
-    const bulk = document.querySelector("#bulkTxForm textarea[name='text']");
-    if(bulk) bulk.value = bulkText;
   }
   function serializeForm(form){
     return Object.fromEntries(new FormData(form).entries());
@@ -1994,32 +1919,11 @@
     f.reset(); resetForms();
   });
 
-  document.getElementById("parseTxPhotoBtn").addEventListener("click", async () => {
-    const form = document.getElementById("txForm");
-    const box = document.getElementById("aiResult");
-    const file = form.elements.photo.files[0];
-    try{
-      box.classList.remove("hidden", "dangerBox", "okBox");
-      box.classList.add("okBox");
-      box.textContent = "解析中...";
-      const parsed = await analyzeReceiptFile(file);
-      fillTxFormFromAi(form, parsed);
-      const count = Array.isArray(parsed?.items) ? parsed.items.length : 0;
-      box.textContent = count > 1
-        ? `已解析 ${count} 筆，已放到快速拆帳文字框。確認後請按「拆成多筆支出」。`
-        : "已解析並填入支出表單，確認後請按「新增支出」。";
-    }catch(err){
-      box.classList.remove("hidden", "okBox");
-      box.classList.add("dangerBox");
-      box.textContent = `解析失敗：${err.message || err}`;
-    }
-  });
-
   document.getElementById("bulkTxForm").addEventListener("submit", e => {
     e.preventDefault();
     const f = e.currentTarget;
     const v = serializeForm(f);
-    const parsed = parseAiBillText(v.text || "");
+    const parsed = parseBillText(v.text || "");
     const finalDate = parsed.date || v.date || todayISO();
     const finalStore = parsed.store || getFinalStore(v);
     const finalCategory = parsed.category || "";
@@ -2035,7 +1939,7 @@
         amount:row.amount,
         category:finalCategory || guessCategory(row.item),
         pay:"未分類",
-        note:"由 ChatGPT 帳單整理匯入"
+        note:"由文字拆帳匯入"
       });
       updateStockFromPurchase(row.item, row.amount, finalDate);
       added++;
@@ -2046,7 +1950,7 @@
     f.reset(); resetForms();
   });
 
-  function parseAiBillText(text){
+  function parseBillText(text){
     const out = { store:"", date:"", category:"", items:[] };
     const lines = String(text || "").split(/\n+/).map(x=>x.trim()).filter(Boolean);
 
@@ -2181,7 +2085,7 @@
   }
   function rowsToCsv(title, rows){
     if(!rows.length) return `${title}\n`;
-    const keys = [...new Set(rows.flatMap(row => Object.keys(row)))].filter(k => !["photo","imageSavedAt","imageExpiredAt"].includes(k));
+    const keys = [...new Set(rows.flatMap(row => Object.keys(row)))];
     return [
       title,
       keys.join(","),
