@@ -1,4 +1,4 @@
-const CACHE_NAME = "happy-family-cashflow-supabase-v3-planned-expenses";
+const CACHE_NAME = "happy-family-cashflow-supabase-v4-month-table-fix";
 const ASSETS = [
   "./",
   "./index.html",

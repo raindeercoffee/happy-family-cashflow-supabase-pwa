@@ -1046,7 +1046,6 @@
   const monthISO = (d = new Date()) => d.toISOString().slice(0,7);
   const money = n => "$" + Math.round(Number(n || 0)).toLocaleString("zh-TW");
   const uid = () => crypto?.randomUUID?.() || String(Date.now()) + Math.random().toString(16).slice(2);
-  const parseMonth = s => s ? Number(s.replace("-","")) : null;
   const currentMonthNum = () => Number(monthISO().replace("-",""));
   const daysBetween = (a,b) => Math.round((new Date(b) - new Date(a)) / 86400000);
   const addDays = (date, days) => {
@@ -1055,6 +1054,7 @@
     return d.toISOString().slice(0,10);
   };
   const clampDayDate = (ym, day) => {
+    ym = toMonthKey(ym) || monthISO();
     const [y,m] = ym.split("-").map(Number);
     const last = new Date(y, m, 0).getDate();
     return `${ym}-${String(Math.min(Number(day || 1), last)).padStart(2,"0")}`;
@@ -1263,7 +1263,9 @@
       }, payload => {
         const updatedAt = payload.new?.updated_at || "";
         if(updatedAt && updatedAt !== lastRemoteUpdatedAt){
+          const plannedRows = db.plannedExpenses;
           db = normalizeData(payload.new?.data || defaultData);
+          db.plannedExpenses = plannedRows;
           lastRemoteUpdatedAt = updatedAt;
           render();
           setSyncStatus(`已同步：${household.invite_code}`, "ok");
@@ -1354,18 +1356,43 @@
       });
     });
   }
+  function toMonthKey(value){
+    if(!value) return "";
+    if(value instanceof Date && !Number.isNaN(value.getTime())){
+      return `${value.getFullYear()}-${String(value.getMonth()+1).padStart(2,"0")}`;
+    }
+    const raw = String(value).trim();
+    const match = raw.match(/^(\d{4})[-\/](\d{1,2})(?:[-\/]\d{1,2})?/);
+    if(match) return `${match[1]}-${String(Number(match[2])).padStart(2,"0")}`;
+    return "";
+  }
+  function amountNumber(value){
+    return Number(String(value ?? 0).replace(/,/g,"")) || 0;
+  }
+  function rowMonthValue(row, ...keys){
+    for(const key of keys){
+      const month = toMonthKey(row?.[key]);
+      if(month) return month;
+    }
+    return "";
+  }
+  function isEnabledRow(row){
+    const status = String(row?.status || row?.state || "active").toLowerCase();
+    return !["disabled","cancelled","canceled"].includes(status);
+  }
   function activeInMonth(row, ym = monthISO()){
-    const m = Number(ym.replace("-",""));
-    const start = parseMonth(row.start) || 0;
-    const end = parseMonth(row.end) || 999999;
-    return m >= start && m <= end;
+    const selected = toMonthKey(ym);
+    if(!selected || !isEnabledRow(row)) return false;
+    const start = rowMonthValue(row, "start", "startMonth", "start_month", "startDate", "start_date");
+    const end = rowMonthValue(row, "end", "endMonth", "end_month", "endDate", "end_date");
+    return (!start || start <= selected) && (!end || selected <= end);
   }
   function serializeForm(form){
     return Object.fromEntries(new FormData(form).entries());
   }
-  function addRow(collection, row){
+  async function addRow(collection, row){
     db[collection].push({ id: uid(), householdId: household?.id || "", createdAt: new Date().toISOString(), ...row });
-    save();
+    await save();
   }
   async function removeRow(collection, id){
     if(collection === "plannedExpenses" && supabase && household){
@@ -1380,7 +1407,7 @@
       }
     }
     db[collection] = db[collection].filter(x => x.id !== id);
-    save();
+    await save();
   }
   function updateStockFromPurchase(item, amount, date){
     const name = (item || "").trim();
@@ -1451,14 +1478,14 @@
     const incomes = activeSources.map(x => {
       const actual = getIncomeActual(x.id, ym);
       const hasActual = !!actual;
-      const amount = hasActual ? Number(actual.amount || 0) : Number(x.amount || 0);
+      const amount = hasActual ? amountNumber(actual.amount) : amountNumber(x.amount);
       return {
         date: clampDayDate(ym,x.day),
         type: hasActual ? (actual.received === "yes" ? "實收" : "收入預估") : "收入預估",
         name: x.name,
         amount,
-        plannedAmount:Number(x.amount || 0),
-        actualAmount:hasActual ? Number(actual.amount || 0) : null,
+        plannedAmount:amountNumber(x.amount),
+        actualAmount:hasActual ? amountNumber(actual.amount) : null,
         received:actual?.received || ""
       };
     });
@@ -1466,7 +1493,7 @@
       date: clampDayDate(ym,x.day),
       type:x.type === "installment" ? "分期" : "固定",
       name:x.name,
-      amount:-Number(x.amount || 0)
+      amount:-amountNumber(x.amount)
     }));
     return [...incomes, ...fixed].sort((a,b)=>a.date.localeCompare(b.date));
   }
@@ -1478,7 +1505,7 @@
   function plannedIncomeForMonth(ym = monthISO()){
     return db.incomes
       .filter(x => activeInMonth(x,ym) && x.status !== "paused")
-      .reduce((s,x)=>s+Number(x.amount || 0),0);
+      .reduce((s,x)=>s+amountNumber(x.amount),0);
   }
 
   function actualIncomeForMonth(ym = monthISO()){
@@ -1486,7 +1513,7 @@
       .filter(x => activeInMonth(x,ym) && x.status !== "paused")
       .reduce((s,x)=>{
         const actual = getIncomeActual(x.id, ym);
-        return s + Number(actual ? actual.amount : x.amount || 0);
+        return s + amountNumber(actual ? actual.amount : x.amount);
       },0);
   }
   function addMonthsToYm(ym, offset){
@@ -1501,12 +1528,14 @@
   }
 
   function transactionsForMonth(ym){
-    return db.transactions.filter(t => (t.date || "").startsWith(ym));
+    const selected = toMonthKey(ym);
+    return db.transactions.filter(t => toMonthKey(t.date) === selected);
   }
 
   function plannedExpensesForMonth(ym, status = "pending"){
+    const selected = toMonthKey(ym);
     return db.plannedExpenses
-      .filter(x => (x.dueDate || x.due_date || "").startsWith(ym))
+      .filter(x => rowMonthValue(x, "dueDate", "due_date") === selected)
       .filter(x => !status || (x.status || "pending") === status)
       .sort((a,b)=>(a.dueDate || a.due_date || "").localeCompare(b.dueDate || b.due_date || ""));
   }
@@ -1515,9 +1544,9 @@
     const currentYm = monthISO();
     return db.stock.reduce((sum, s) => {
       const next = nextBuyDate(s);
-      const price = Number(s.price || avgItemPrice(s.item) || 0);
+      const price = amountNumber(s.price || avgItemPrice(s.item) || 0);
       if(!price) return sum;
-      if(next && next.startsWith(ym)) return sum + price;
+      if(next && toMonthKey(next) === toMonthKey(ym)) return sum + price;
       if(!next && ym === currentYm && (s.status === "buy" || s.status === "low")) return sum + price;
       return sum;
     },0);
@@ -1531,20 +1560,21 @@
     const plannedIncome = plannedIncomeForMonth(ym);
     const fixed = Math.abs(fixedRows.reduce((s,x)=>s+Number(x.amount || 0),0));
     const plannedRows = plannedExpensesForMonth(ym, "pending");
-    const planned = plannedRows.reduce((s,x)=>s+Number(x.amount || 0),0);
+    const planned = plannedRows.reduce((s,x)=>s+amountNumber(x.amount),0);
     const txs = transactionsForMonth(ym);
-    const spend = txs.reduce((s,t)=>s+Number(t.amount || 0),0);
+    const spend = txs.reduce((s,t)=>s+amountNumber(t.amount),0);
     const reserve = reserveForMonth(ym);
     const beforeDailySpend = income - fixed - planned - reserve;
     const afterRecordedSpend = income - fixed - planned - reserve - spend;
     return { ym, incomeRows, fixedRows, plannedRows, income, plannedIncome, fixed, planned, spend, reserve, beforeDailySpend, afterRecordedSpend };
   }
 
-  function monthsUntilYearEnd(startYm = monthISO()){
-    const [year, startMonth] = startYm.split("-").map(Number);
+  function monthsUntilYearEnd(startYm = monthISO(), count = 24){
+    const [year, startMonth] = (toMonthKey(startYm) || monthISO()).split("-").map(Number);
     const months = [];
-    for(let m = startMonth; m <= 12; m++){
-      months.push(`${year}-${String(m).padStart(2,"0")}`);
+    for(let i = 0; i < count; i++){
+      const d = new Date(year, startMonth - 1 + i, 1);
+      months.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`);
     }
     return months;
   }
@@ -1966,6 +1996,16 @@
     });
   });
 
+  document.getElementById("monthSelectForm").addEventListener("submit", e => {
+    e.preventDefault();
+    selectedMonthForPanel = toMonthKey(document.getElementById("monthSelect").value) || monthISO();
+    renderMonthTable();
+  });
+  document.getElementById("monthSelect").addEventListener("change", e => {
+    selectedMonthForPanel = toMonthKey(e.target.value) || monthISO();
+    renderMonthTable();
+  });
+
   document.getElementById("authForm").addEventListener("submit", async e => {
     e.preventDefault();
     if(!supabase) return showAuthNotice("尚未設定 Supabase。", true);
@@ -2063,20 +2103,27 @@
     f.reset(); resetForms();
   });
 
-  document.getElementById("recurringForm").addEventListener("submit", e => {
+  document.getElementById("recurringForm").addEventListener("submit", async e => {
     e.preventDefault();
     const f = e.currentTarget;
     const v = serializeForm(f);
-    addRow("recurring", {
-      name:v.name.trim(),
-      amount:Number(v.amount || 0),
-      day:Number(v.day || 1),
-      start:v.start || monthISO(),
-      end:v.end || "",
-      type:v.type,
-      category:v.category
-    });
-    f.reset(); resetForms();
+    try{
+      await addRow("recurring", {
+        name:v.name.trim(),
+        amount:amountNumber(v.amount),
+        day:Number(v.day || 1),
+        start:toMonthKey(v.start) || monthISO(),
+        end:toMonthKey(v.end),
+        type:v.type,
+        category:v.category,
+        status:"active"
+      });
+      renderDashboard();
+      renderMonthTable();
+      f.reset(); resetForms();
+    }catch(err){
+      alert(`新增固定支出失敗：${err.message || err}`);
+    }
   });
 
   document.getElementById("plannedExpenseForm").addEventListener("submit", async e => {
@@ -2293,11 +2340,17 @@
     return "其他";
   }
 
-  document.addEventListener("click", e => {
+  document.addEventListener("click", async e => {
     const del = e.target.dataset.del;
     if(del){
       const [collection,id] = del.split(":");
-      if(confirm("確定刪除？")) removeRow(collection,id);
+      if(confirm("確定刪除？")){
+        await removeRow(collection,id);
+        if(collection === "recurring"){
+          renderDashboard();
+          renderMonthTable();
+        }
+      }
     }
     const incomeToggle = e.target.dataset.incomeToggle;
     if(incomeToggle){
